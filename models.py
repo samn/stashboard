@@ -228,6 +228,9 @@ class Status(db.Model):
     def resource_url(self):
         return "/statuses/" + str(self.slug)
 
+    def get_level(self):
+        return Level.get_level(int(self.severity))
+
     def rest(self, base_url):
         """ Return a Python object representing this model"""
 
@@ -235,7 +238,7 @@ class Status(db.Model):
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
-        m["level"] = Level.get_level(int(self.severity))
+        m["level"] = self.get_level()
         m["url"] = base_url + self.resource_url()
         # This link shouldn't be hardcoded
 

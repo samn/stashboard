@@ -39,7 +39,7 @@ from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
-from handlers import site, api
+from handlers import site, atom, api
 from models import Status, Setting
 
 
@@ -58,6 +58,10 @@ ROUTES = [
     ('/*$', rootHandler),
     ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
+
+    #Atom feeds
+    ('/feed/services/events', atom.ServicesEventsFeed),
+    ('/feed/services/(.+)/events', atom.ServicesEventsFeed),
 
     #API
     ('/403.html', site.UnauthorizedHandler),
