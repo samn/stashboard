@@ -1,23 +1,23 @@
 # The MIT License
-# 
+#
 # Copyright (c) 2008 William T. Katz
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to 
-# deal in the Software without restriction, including without limitation 
-# the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-# and/or sell copies of the Software, and to permit persons to whom the 
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
 
@@ -46,8 +46,8 @@ from models import Status, Setting
 # Log a message each time this module get loaded.
 logging.info('Loading %s, app version = %s',
              __name__, os.getenv('CURRENT_VERSION_ID'))
-           
-if (config.SITE["rich_client"]):  
+
+if (config.SITE["rich_client"]):
     serviceHandler = site.ServiceHandler
     rootHandler = site.RootHandler
 else:
@@ -58,7 +58,7 @@ ROUTES = [
     ('/*$', rootHandler),
     ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
-    
+
     #API
     ('/403.html', site.UnauthorizedHandler),
     ('/404.html', site.NotFoundHandler),
@@ -72,7 +72,7 @@ ROUTES = [
     (r'/api/(.+)/status-images', api.ImagesListHandler),
     (r'/api/(.+)/levels', api.LevelsListHandler),
     (r'/api/.*', api.NotFoundHandler),
-    
+
     #SITE
     (r'/services/(.+)/(.+)/(.+)/(.+)', serviceHandler),
     (r'/services/(.+)/(.+)/(.+)', serviceHandler),
@@ -81,10 +81,10 @@ ROUTES = [
     (r'/documentation/credentials', site.ProfileHandler),
     (r'/documentation/verify', site.VerifyAccessHandler),
     (r'/documentation/(.+)', site.DocumentationHandler),
-    
+
     ('/.*$', site.NotFoundHandler),
-    
-    
+
+
 ]
 
 def main():
