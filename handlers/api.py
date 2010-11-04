@@ -53,6 +53,7 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import slugify
+from utils.tasks import add_hub_notification_task
 from models import Status, Event, Service, Level
 import config
 
@@ -261,6 +262,7 @@ class EventsListHandler(restful.Controller):
 
                         e.put()
                         self.json(e.rest(self.base_url(version)))
+                        add_hub_notification_task(service.name)
                     else:
                         self.error(404, "Status %s not found" % status_slug)
                 else:
@@ -323,6 +325,7 @@ class EventInstanceHandler(restful.Controller):
                 if (event and service.key() == event.service.key()):
                     event.delete()
                     self.success(event.rest(self.base_url(version)))
+                    add_hub_notification_task(service.name)
                 else:
                     self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
             else:
