@@ -7,25 +7,25 @@
         var endDate = false;
         var isAdmin = false;
         var service = "{{ service }}";
-      
+
         {% if start_date %}
           var startDate = new Date("{{ start_date_stamp }}");
           var endDate = new Date("{{ end_date_stamp }}");
         {% endif %}
-      
+
         {% if user_is_admin %}
           var isAdmin = true;
         {% endif %}
-      
+
         stashboard.fillService(service, isAdmin, startDate, endDate);
       });
     </script>
 {% endblock %}
 
 {% block content %}
-        
+
       <div id="webservices" class="frame">
-        
+
         {% if user_is_admin %}
           <a class="button" id="update-status">
 	    Update Status
@@ -36,16 +36,16 @@
 
 
         {% endif %}
-        
+
         <h2><span></span></h2>
 
 	<p id="serviceDescription"></p>
 
-        {% if start_date %}        
+        {% if start_date %}
           <h3 class="date-range">
             {{ start_date|date:"n/j/Y" }}
           </h3>
-        {% endif %}      
+        {% endif %}
 
         <table class="event-log" cellpadding="10">
           <thead>
@@ -73,9 +73,9 @@
 
 
       </div>
-      
+
       {% if user_is_admin %}
-      
+
       <div class="dialog" id="delete-service-modal" title="Delete Service">
         <p>Are you sure you want to delete this service?</p>
       </div>
@@ -99,8 +99,7 @@
         <textarea
           id="service-description" name="service-description"></textarea>
       </div>
-      
+
       {% endif %}
 
 {% endblock %}
-
