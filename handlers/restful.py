@@ -173,6 +173,8 @@ class Controller(webapp.RequestHandler):
         for p in args:
             path = os.path.join(path, p)
 
+        templateparams.update({'root_url': config.SITE['root_url']})
+
         self.response.out.write(template.render(path, templateparams))
 
     def json(self, data):
