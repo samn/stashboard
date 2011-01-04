@@ -101,7 +101,7 @@ class Service(db.Model):
         stats = {}
         
         for i in range(5):
-            stats[yesterday.day] = {
+            stats[yesterday] = {
                 "image": lowest.image,
                 "day": yesterday,
             }
@@ -109,8 +109,8 @@ class Service(db.Model):
         
         for event in events:
             if event.status.severity > severity:
-                stats[event.start.day]["image"] = "information"
-                stats[event.start.day]["information"] = True
+                stats[event.start]["image"] = "information"
+                stats[event.start]["information"] = True
 
         results = []
 
