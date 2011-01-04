@@ -22,17 +22,17 @@ from google.appengine.ext import db
 from models import Status, Service, Event
 from datetime import datetime, timedelta, date
 
-#foo = Service(name="Service Foo", slug="service-foo",
-#              description="Scalable and reliable foo service across the globe")
-#foo.put()
-#bar = Service(name="Service Bar", slug="service-bar",
-              description="Scalable and reliable foo service")
-#bar.put()
-#delete = Service(name="Delete Me", slug="delete", 
-                 description="Delete Me Please")
-#delete.put()
+foo = Service(name="Service Foo", slug="service-foo",
+              description="Scalable and reliable foo service across the globe")
+foo.put()
+bar = Service(name="Service Bar", slug="service-bar",
+             description="Scalable and reliable foo service")
+bar.put()
+delete = Service(name="Delete Me", slug="delete", 
+                description="Delete Me Please")
+delete.put()
 
-bar = Service.get_by_slug("bar")
+bar = Service.get_by_slug("service-bar")
 cat = Status.get_by_slug("down")        
 
 dates = [
