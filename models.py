@@ -87,25 +87,27 @@ class Service(db.Model):
 
     #Specialty function for front page
     def last_five_days(self):
-        
-        
+        start = date.today() - timedelta(days=1)
+        end = start - timedelta(days=5)
+        return self.events_for_days(start, end)
+
+    def events_for_days(self, start, end):
+        """ Return a list of the events that occurred
+            between start and end (exclusive) """
         lowest = Status.default()
         severity = lowest.severity
         
-        yesterday = date.today() - timedelta(days=1)
-        ago = yesterday - timedelta(days=5)
-        
-        events = self.events.filter('start >', ago) \
-            .filter('start <', yesterday).fetch(100)
+        events = self.events.filter('start >', start) \
+            .filter('start <', end).fetch(100)
         
         stats = {}
         
         for i in range(5):
-            stats[yesterday] = {
+            stats[start] = {
                 "image": lowest.image,
-                "day": yesterday,
+                "day": start,
             }
-            yesterday = yesterday - timedelta(days=1)
+            start = start - timedelta(days=1)
         
         for event in events:
             if event.status.severity > severity:
