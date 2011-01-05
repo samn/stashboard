@@ -41,6 +41,7 @@ __author__ = 'Kyle Conroy'
 import datetime
 from datetime import date, timedelta
 import calendar
+import dateutil.parser as dateparser
 import string
 import re
 import os
@@ -106,12 +107,12 @@ def default_template_data():
     
     return data
 
-def get_past_days(num):
-    date = datetime.date.today()
+def get_past_days(num, end=datetime.date.today()):
+    """ returns num dates, ending at end """
     dates = []
     
     for i in range(1, num+1):
-        dates.append(date - datetime.timedelta(days=i))
+        dates.append(end - datetime.timedelta(days=i))
     
     return dates
     
@@ -207,17 +208,32 @@ class BasicRootHandler(restful.Controller):
         user = users.get_current_user()
         logging.debug("BasicRootHandler#get")
 
+        end = datetime.date.today()
+        start = end + timedelta(days=-5)
+
+        start_date = dateparser.parse(self.request.get('start', default_value=str(start)))
+        end_date = dateparser.parse(self.request.get('end', default_value=str(end)))
+
+        if end_date > datetime.datetime.today() or start_date > end_date:
+            end_date = datetime.date.today()
+            start_date = end_date - timedelta(days=5)
+
         q = Service.all()
         q.order("name")
-        services = q.fetch(100)
+        services = []
+        for service in q.fetch(100):
+            events = service.events_for_days(start_date, end_date)
+            services.append((service, events))
         
         p = Status.all()
         p.order("severity")
         
-        past = get_past_days(5)
-        
+        past = get_past_days(5, end_date)
+
         td = default_template_data()
-        td["services"] = q.fetch(100)
+        td["start_date"] = start_date
+        td["end_date"] = end_date
+        td["services"] = services
         td["statuses"] = p.fetch(100)
         td["past"] = past
         td["default"] = Status.default()

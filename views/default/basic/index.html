@@ -7,23 +7,24 @@
           <table id="service-list">
             <thead>
               <tr>
-                <th>Service</th>
+                  <th> Service <a class="arrow" href="?start={{end_date}}&end={{end_date|delta:5}}">&lt;&lt;</a> </th>
                 <th class="today">Current</th>
-              
+                 
                 {% for day in past %}
                   <th class="date">{{ day|date:"N j" }}</th>
                 {% endfor %}
+                <th><a class="arrow" href="?start={{start_date|delta:-5}}&end={{start_date}}">&gt;&gt;</a></th>
 
             </thead>
 
             <tbody id="services-body">
-              {% for service in services %}
+              {% for service, events in services %}
                 <tr>
                   <td>
                     <a href="/services/{{ service.slug }}">
                       {{ service.name }} </a>
                   </td>
-                  
+
                   <td class="status highlight">
 		    <a href="/services/{{ service.slug }}">
 		    {% if service.current_event.status %}
@@ -36,7 +37,7 @@
 		    </a>
                   </td>
                   
-                  {% for status in service.last_five_days %}
+                  {% for status in events %}
                     <td class="status">
                       <a href="/services/{{service.slug}}/{{ status.day|date:"Y/n/j" }}">
                       <img src="/images/status/{{ status.image }}.png"
@@ -45,6 +46,8 @@
                     </td>
                   {% endfor %}
                       
+                  {# empty column for the pagination button #}
+                  <td></td>
                 </tr>
                 
               {% endfor %}

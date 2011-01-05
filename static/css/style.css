@@ -210,5 +210,7 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
     font-size: 10px;
 }
 
-
+a.arrow {
+    float:right;
+}
 

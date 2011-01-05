@@ -84,35 +84,30 @@ class Service(db.Model):
         event = self.events.order('-start').get()
         return event
 
-
-    #Specialty function for front page
-    def last_five_days(self):
-        start = date.today() - timedelta(days=1)
-        end = start - timedelta(days=5)
-        return self.events_for_days(start, end)
-
     def events_for_days(self, start, end):
         """ Return a list of the events that occurred
-            between start and end (exclusive) """
+            between start and end (inclusive)
+            Assumes start < end """
         lowest = Status.default()
         severity = lowest.severity
         
-        events = self.events.filter('start >', start) \
-            .filter('start <', end).fetch(100)
+        events = self.events.filter('start >=', start) \
+            .filter('start <=', end).fetch(100)
         
         stats = {}
         
-        for i in range(5):
-            stats[start] = {
+        for i in range(end.toordinal() - start.toordinal()):
+            stats[start.toordinal()] = {
                 "image": lowest.image,
                 "day": start,
             }
-            start = start - timedelta(days=1)
-        
+            start = start + timedelta(days=1)
+       
         for event in events:
             if event.status.severity > severity:
-                stats[event.start]["image"] = "information"
-                stats[event.start]["information"] = True
+                key = event.start.toordinal()
+                stats[key]["image"] = "information"
+                stats[key]["information"] = True
 
         results = []
 
@@ -127,7 +122,7 @@ class Service(db.Model):
         
         
     def events_for_day(self, day):
-        """ Return the largest seveirty (of events) for a given day. If no 
+        """ Return the largest severity (of events) for a given day. If no 
         events occured, return the lowest severity rating.
         
         Arguments: 

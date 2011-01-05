@@ -88,6 +88,7 @@ ROUTES = [
 ]
 
 def main():
+    webapp.template.register_template_library('templatefilters')
     # Check if defaults have been installed
     installed_defaults = memcache.get("installed_defaults")
     if installed_defaults is None:
