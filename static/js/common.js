@@ -293,8 +293,8 @@ stashboard.fillIndex = function() {
         }).button().click(function() {
             stashboard.endDate = stashboard.startDate;
             stashboard.startDate = new Date(stashboard.endDate.getTime() - 86400000*numDays);
-           
-            if (new Date().getTime() - 86400000*stashboard.historySize > stashboard.startDate.getTime()) {
+
+            if (new Date().getTime() - stashboard.startDate.getTime() - 86400000 >= 86400000*(stashboard.historySize+1)) {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
