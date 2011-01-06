@@ -469,9 +469,34 @@ stashboard.fillIndex = function() {
         $("#add-service-modal").dialog('open');
     });
 
+    $("#add-service-region").button().click(function() {
+        $.ajax({
+            type: 'GET',
+            url: '/api/v1/regions',
+            dataType: 'json',
+            success: function(data) {
+                var regions = data.regions;
+                var select = $('<select>', {'name': 'service-region', 'id': 'service-region'});
+                for (var i=0, l=regions.length; i < l; i++) {
+                    $('<option />', {
+                      'value': data.regions[i].name,
+                      'text': data.regions[i].name
+                    })
+                    .appendTo(select);
+                }
+                $('#add-service-region').replaceWith($('<div>') 
+                    .append($('<label>', {
+                      'for': 'service-region',
+                      'text': 'Region (optional)'
+                    }))
+                    .append(select));
+            }
+        });
+    });
+
 
     $("#add-service-modal").dialog({
-        height: 310,
+        height: 360,
         width: 460,
         resizable: false,
         modal: true,
@@ -483,7 +508,8 @@ stashboard.fillIndex = function() {
                     url: "/api/v1/services",
                     data: { 
                         name: $("#service-name").val(), 
-                        description: $("#service-description").val()
+                        description: $("#service-description").val(),
+                        region: $("#service-region").val()
                     },
                     dataType: 'json', 
                     context: $("#service-list"), 
