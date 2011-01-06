@@ -5,6 +5,7 @@
       $(document).ready(function(){
         stashboard.startDate = new Date("{{start_date|date:"Y/n/j"}}")
         stashboard.endDate = new Date("{{end_date|date:"Y/n/j"}}"); 
+        stashboard.historySize = {{history_size}}
         stashboard.fillIndex();
       });
     </script>

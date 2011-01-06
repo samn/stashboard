@@ -140,19 +140,23 @@ class RootHandler(restful.Controller):
         q = Service.all()
         q.order("name")
 
-        end = datetime.date.today()
+        today = datetime.datetime.today()
+        end = today
         start = end - timedelta(days=5)
 
         start_date = dateparser.parse(self.request.get('start', default_value=str(start)))
         end_date = dateparser.parse(self.request.get('end', default_value=str(end)))
 
-        if end_date > datetime.datetime.today() or start_date > end_date:
-            end_date = datetime.date.today()
+        history_size = config.SITE['history_size']
+        if end_date > today or start_date > end_date or \
+        today.toordinal() - history_size > start_date.toordinal():
+            end_date = today
             start_date = end_date - timedelta(days=5)
         
         td = default_template_data()
         td["start_date"] = start_date - timedelta(days=1)
         td["end_date"] = end_date - timedelta(days=1)
+        td["history_size"] = history_size
         td["past"] = get_past_days(5)
 
         self.render(td, 'index.html')
@@ -220,16 +224,19 @@ class BasicRootHandler(restful.Controller):
         user = users.get_current_user()
         logging.debug("BasicRootHandler#get")
 
-        end = datetime.date.today()
+        today = datetime.datetime.today()
+        end = today
         start = end - timedelta(days=+5)
 
         start_date = dateparser.parse(self.request.get('start', default_value=str(start)))
         end_date = dateparser.parse(self.request.get('end', default_value=str(end)))
 
-        if end_date > datetime.datetime.today() or start_date > end_date:
-            end_date = datetime.date.today()
+        history_size = config.SITE['history_size']
+        if end_date > today or start_date > end_date or \
+        today.toordinal() - history_size > start_date.toordinal():
+            end_date = today
             start_date = end_date - timedelta(days=5)
-
+        
         q = Service.all()
         q.order("name")
         services = []

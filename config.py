@@ -46,4 +46,5 @@ SITE = {
     "root_url": "http://stashboard.appspot.com",
     "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
     "rich_client": True, #If false, the website will go into a simplified read-only view
+    "history_size": 30 # How far back can people look (in days)
 }
