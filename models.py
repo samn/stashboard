@@ -67,13 +67,18 @@ class Level(object):
         return False
      
 
+class Region(db.Model):
+    """ Represents the physical location of a Service """
+    name = db.StringProperty(required=True)
+
 class Service(db.Model):
     """A service to track
 
         Properties:
         name        -- string: The name of this service
         description -- string: The function of the service
-        slug        -- stirng: URL friendly version of the name
+        slug        -- string: URL friendly version of the name
+        region      -- region: The region that the service is located in
 
     """
     @staticmethod
@@ -141,6 +146,7 @@ class Service(db.Model):
     slug = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     description = db.StringProperty(required=True)
+    region = db.ReferenceProperty(Region, required=False)
     
     def sid(self):
         return str(self.key())
@@ -296,4 +302,3 @@ class AuthRequest(db.Model):
 
 class Setting(db.Model):
     name = db.StringProperty(required=True)
-
