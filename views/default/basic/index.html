@@ -7,13 +7,13 @@
           <table id="service-list">
             <thead>
               <tr>
-                  <th> Service <a class="arrow" href="?start={{end_date}}&end={{end_date|delta:5}}">&lt;&lt;</a> </th>
+                  <th> Service <a class="arrow" href="?start={{end_date|date:"Y-n-j"}}&end={{end_date|delta:5|date:"Y-n-j"}}">&lt;&lt;</a> </th>
                 <th class="today">Current</th>
                  
                 {% for day in past %}
                   <th class="date">{{ day|date:"N j" }}</th>
                 {% endfor %}
-                <th><a class="arrow" href="?start={{start_date|delta:-5}}&end={{start_date}}">&gt;&gt;</a></th>
+                <th><a class="arrow" href="?start={{start_date|delta:-5|date:"Y-n-j"}}&end={{start_date|date:"Y-n-j"}}">&gt;&gt;</a></th>
 
             </thead>
 
