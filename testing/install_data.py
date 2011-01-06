@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 
 from google.appengine.ext import db
-from models import Status, Service, Event
+from models import Status, Service, Event, Region
 from datetime import datetime, timedelta, date
 
 foo = Service(name="Service Foo", slug="service-foo",
@@ -48,4 +48,8 @@ for d in dates:
           message="Error fine", start=d)
     e.put()
 
+regions = ["North America", "EMEA"]
+for region in regions:
+    r =  Region(name=region)
+    r.put()
 

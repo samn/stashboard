@@ -62,6 +62,7 @@ ROUTES = [
     #API
     ('/403.html', site.UnauthorizedHandler),
     ('/404.html', site.NotFoundHandler),
+    (r'/api/(.+)/regions', api.RegionsListHandler),
     (r'/api/(.+)/services', api.ServicesListHandler),
     (r'/api/(.+)/services/(.+)/events', api.EventsListHandler),
     (r'/api/(.+)/services/(.+)/events/current', api.CurrentEventHandler),

@@ -53,7 +53,7 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service, Level
+from models import Status, Event, Service, Level, Region
 import config
 
 def aware_to_naive(d):
@@ -96,6 +96,7 @@ class ServicesListHandler(restful.Controller):
             
             name = self.request.get('name', default_value=None)
             description = self.request.get('description', default_value=None)
+            region = self.request.get('region', default_value=None)
             
             if name and description:
                 slug = slugify.slugify(name)
@@ -104,15 +105,19 @@ class ServicesListHandler(restful.Controller):
                 # Update existing resource
                 if existing_s:
                     existing_s.description = description
+                    if region:
+                        # TODO: delete a region from service
+                        existing_s.region = Region.get_by_name(region)
                     existing_s.put()
                     self.json(existing_s.rest(self.base_url(version)))
                 # Create new service
                 else:
-                    s = Service(name=name, slug=slug, description=description)
+                    region = Region.get_by_name(region)
+                    s = Service(name=name, slug=slug, description=description, region=region)
                     s.put()
                     self.json(s.rest(self.base_url(version)))
             else:
-                self.error(400, "Bad Data: Name: %s, Description: %s" % (name, description))
+                self.error(400, "Bad Data: Name: %s, Description: %s, Region: %s" % (name, description, region))
         else:
             self.error(404, "API Version %s not supported" % version)
 
@@ -137,6 +142,7 @@ class ServiceInstanceHandler(restful.Controller):
         logging.debug("ServiceInstanceHandler#post")
         name = self.request.get('name', default_value=None)
         description = self.request.get('description', default_value=None)
+        region = self.request.get('region', default_value=None)
         
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
@@ -146,8 +152,11 @@ class ServiceInstanceHandler(restful.Controller):
                 
                 if name:
                     service.name = name
+
+                if region:
+                    service.region = Region.get_by_name(region)
                 
-                if name or description:
+                if name or description or region:
                     service.put()
                     
                 self.json(service.rest(self.base_url(version)))   
@@ -490,3 +499,11 @@ class LevelsListHandler(restful.Controller):
             
             self.error(404, "API Version %s not supported" % version)
 
+class RegionsListHandler(restful.Controller):
+    def get(self, version):
+        logging.debug("RegionsListHandler#get")
+
+        if (self.valid_version(version)):
+            self.json({"regions": Region.all_regions()})
+        else:
+            self.error(404, "API Version %s not supported" % version)

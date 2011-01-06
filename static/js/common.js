@@ -469,9 +469,32 @@ stashboard.fillIndex = function() {
         $("#add-service-modal").dialog('open');
     });
 
+    $("#add-service-region").button().click(function() {
+        $.ajax({
+            type: 'GET',
+            url: '/api/v1/regions',
+            dataType: 'json',
+            success: function(data) {
+                var regions = data.regions;
+                var select = $('<select>', {'name': 'service-region', 'id': 'service-region'});
+                for (var i=0, l=regions.length; i < l; i++) {
+                    $('<option />', {
+                      'value': data.regions[i].name,
+                      'text': data.regions[i].name
+                    }).appendTo(select);
+                }
+                $('#add-service-region').replaceWith($('<div>') 
+                    .append($('<label>', {
+                      'for': 'service-region',
+                      'text': 'Region (optional)'
+                    })).append(select));
+            }
+        });
+    });
+
 
     $("#add-service-modal").dialog({
-        height: 310,
+        height: 360,
         width: 460,
         resizable: false,
         modal: true,
@@ -483,7 +506,8 @@ stashboard.fillIndex = function() {
                     url: "/api/v1/services",
                     data: { 
                         name: $("#service-name").val(), 
-                        description: $("#service-description").val()
+                        description: $("#service-description").val(),
+                        region: $("#service-region").val()
                     },
                     dataType: 'json', 
                     context: $("#service-list"), 
@@ -577,6 +601,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             $("h2 span").text(service.name);
             $("#serviceDescription").text(service.description);
+            $("#serviceRegion").text(service.region);
 
             var populatStatuses = function(current) {
 
@@ -738,12 +763,37 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             $("#service-name").val(service.name);
             $("#service-description").val(service.description);
+            $("#service-region").append($('<option>', {
+                'value': service.region,
+                'text': service.region
+            }));
 
 
             $("#edit-service").click(function(e){
                 e.preventDefault();
+
+                // populate the regions dropdown
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/v1/regions',
+                    dataType: 'json',
+                    success: function(data) {
+                        var select = $('#service-region');
+                        var existing = select.children().val();
+                        var regions = data.regions;
+                        for (var i=0, l=regions.length; i < l; i++) {
+                            if (regions[i].name != existing) {
+                                $('<option />', {
+                                  'value': data.regions[i].name,
+                                  'text': data.regions[i].name
+                                }).appendTo(select);
+                            }
+                        }
+                    }
+                });
+
                 $("#edit-service-modal").dialog({
-                    height: 310,
+                    height: 360,
                     width: 460,
                     resizable: false,
                     modal: true,

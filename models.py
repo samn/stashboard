@@ -71,6 +71,18 @@ class Region(db.Model):
     """ Represents the physical location of a Service """
     name = db.StringProperty(required=True)
 
+    @staticmethod
+    def all_regions():
+        """ Return a list of all regions """
+        regions = []
+        for region in Region.all().fetch(100):
+            regions.append({"name": str(region.name)})
+        return regions
+
+    @staticmethod
+    def get_by_name(name):
+        return Region.all().filter('name = ', name).get()
+
 class Service(db.Model):
     """A service to track
 
@@ -161,6 +173,8 @@ class Service(db.Model):
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
+        if self.region:
+            m["region"] = str(self.region.name)
         m["url"] = base_url + self.resource_url()
         
         event = self.current_event()
