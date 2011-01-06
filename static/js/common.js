@@ -246,17 +246,63 @@ stashboard.fillLegend = function(isAdmin) {
 };
 
 stashboard.fillIndex = function() {
-    var currentNow = new Date();
-    var d = new Date(currentNow.getTime() - 86400000);
     var thead = $("#service-list thead tr");
+    var numDays = (stashboard.endDate.getTime() - stashboard.startDate.getTime()) / 86400000;
 
-    for (var i=0; i < 5; i++) {
-        $("<th />", {
-            "class": "date",
-            text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
-        }).appendTo(thead);
-        d = new Date(d.getTime() - 86400000);
-    }
+    var createDates = function(numDays) {
+        var today = $('th.today');
+        var d = new Date(stashboard.startDate.getTime() + 86400000);
+        for (var i=0; i < numDays; i++) {
+            $("<th />", {
+                "class": "date",
+                text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
+            }).insertAfter(today);
+            d = new Date(d.getTime() + 86400000);
+        }
+    };
+
+    $('th.today').prev().append(
+        $('<a />', {
+            'class': 'arrow',
+            'text': '<<'
+        }).button().click(function() {
+            stashboard.startDate = stashboard.endDate;
+            stashboard.endDate = new Date(stashboard.startDate.getTime() + 86400000*numDays);
+            
+            // don't display statuses from the future
+            if (stashboard.endDate > new Date()) {
+                stashboard.endDate = new Date(new Date().getTime() - 86400000);
+                stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
+            }
+            var tbody = renderServices(stashboard.services);
+            $(".services-body")
+                .after(tbody)
+                .remove()
+                .show();
+            $('.date').remove();
+            createDates(numDays);
+        })
+    );
+        
+    createDates(numDays);
+
+    $('<th />').append(
+        $('<a />', {
+            'class': 'arrow',
+            'text': '>>'
+        }).button().click(function() {
+            stashboard.endDate = stashboard.startDate;
+            stashboard.startDate = new Date(stashboard.endDate.getTime() - 86400000*numDays);
+            var tbody = renderServices(stashboard.services);
+            $(".services-body")
+                .after(tbody)
+                .remove()
+                .show();
+            $('.date').remove();
+            createDates(numDays);
+        })
+    ).appendTo(thead);
+
 
     var createServiceRow = function(data, fetchStatuses){
         var informationImage = "/images/status/question-white.png";
@@ -285,7 +331,7 @@ stashboard.fillIndex = function() {
             })
         ).appendTo(tr);
 
-        for (var i=0; i < 5; i++) {
+        for (var i=0; i < numDays; i++) {
             $("<td />", {"class": "status"}).append(
                 $("<img />", {
                     src: imageRow,
@@ -293,10 +339,6 @@ stashboard.fillIndex = function() {
                 })
             ).appendTo(tr);
         }
-
-        $("#service-list").fadeIn('fast', function(){    
-            $("#services-body").append(tr);
-        });
 
         if (fetchStatuses){
 
@@ -323,17 +365,9 @@ stashboard.fillIndex = function() {
                 }
             });
 
-            var rightNow = new Date();
-            rightNow.setHours(0);
-            rightNow.setMinutes(0);
-	    rightNow.setSeconds(0);
-            rightNow.setMilliseconds(0);
-
-            var endDate = new Date(rightNow.getTime());
-            var startDate = new Date(endDate.getTime() - 86400000 * 5);
             var url = "/api/v1/services/" + data.id + "/events";
-            url += "?start=" + stashboard.rfc1123(startDate);
-            url += "&end=" + stashboard.rfc1123(endDate);
+            url += "?start=" + stashboard.rfc1123(stashboard.startDate);
+            url += "&end=" + stashboard.rfc1123(stashboard.endDate);
 
             $.ajax({ 
                 type: "GET",
@@ -342,14 +376,12 @@ stashboard.fillIndex = function() {
                 success: function(results){ 
                     var calendar = {};
                     var days = [];
+                    var end = stashboard.endDate;
 
-		    // Make end date the correct date
-		    endDate = new Date(endDate.getTime() - 86400000);
-
-                    for (var i=0; i < 5; i++) {
-                        days.push(endDate);
-                        calendar[endDate.getDate()] = false;
-                        endDate = new Date(endDate.getTime() - 86400000);
+                    for (var i=0; i < numDays; i++) {
+                        days.push(end);
+                        calendar[end.getDate()] = false;
+                        end = new Date(end.getTime() - 86400000);
                     }
 
                     var events = results.events;
@@ -384,6 +416,8 @@ stashboard.fillIndex = function() {
                 }
             });
         }
+
+        return tr;
     };
 
     $.ajax({ 
@@ -391,16 +425,23 @@ stashboard.fillIndex = function() {
         url: "/api/v1/services",
         dataType: 'json', 
         success: function(data){ 
-
-            var services = data.services;
-
-            for (var i=0; i < services.length; i++) {
-                createServiceRow(services[i], true);
-            }
-
+            stashboard.services = data.services
+            var tbody = renderServices(stashboard.services);
+            $("#service-list").fadeIn('fast', function(){    
+                $(tbody).replaceAll(".services-body")
+            });
         },
         error: function(){ }
     });
+
+    var renderServices = function(services) {
+        var tb = $("<tbody />", {"class": "services-body"});
+        for (var i=0; i < services.length; i++) {
+            var row = createServiceRow(services[i], true);
+            tb.append(row);
+        }
+        return tb;
+    };
 
     $("#statusBox").click(function(){
         if($(this).is(":checked")){

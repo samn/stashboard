@@ -139,8 +139,20 @@ class RootHandler(restful.Controller):
         
         q = Service.all()
         q.order("name")
+
+        end = datetime.date.today()
+        start = end - timedelta(days=5)
+
+        start_date = dateparser.parse(self.request.get('start', default_value=str(start)))
+        end_date = dateparser.parse(self.request.get('end', default_value=str(end)))
+
+        if end_date > datetime.datetime.today() or start_date > end_date:
+            end_date = datetime.date.today()
+            start_date = end_date - timedelta(days=5)
         
         td = default_template_data()
+        td["start_date"] = start_date - timedelta(days=1)
+        td["end_date"] = end_date - timedelta(days=1)
         td["past"] = get_past_days(5)
 
         self.render(td, 'index.html')
@@ -209,7 +221,7 @@ class BasicRootHandler(restful.Controller):
         logging.debug("BasicRootHandler#get")
 
         end = datetime.date.today()
-        start = end + timedelta(days=-5)
+        start = end - timedelta(days=+5)
 
         start_date = dateparser.parse(self.request.get('start', default_value=str(start)))
         end_date = dateparser.parse(self.request.get('end', default_value=str(end)))
