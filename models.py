@@ -173,6 +173,8 @@ class Service(db.Model):
         m["name"] = str(self.name)
         m["id"] = str(self.slug)
         m["description"] = str(self.description)
+        if self.region:
+            m["region"] = str(self.region.name)
         m["url"] = base_url + self.resource_url()
         
         event = self.current_event()

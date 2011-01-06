@@ -603,6 +603,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             $("h2 span").text(service.name);
             $("#serviceDescription").text(service.description);
+            $("#serviceRegion").text(service.region);
 
             var populatStatuses = function(current) {
 
