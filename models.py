@@ -79,6 +79,10 @@ class Region(db.Model):
             regions.append({"name": str(region.name)})
         return regions
 
+    @staticmethod
+    def get_by_name(name):
+        return Region.all().filter('name = ', name).get()
+
 class Service(db.Model):
     """A service to track
 
