@@ -255,7 +255,7 @@ stashboard.fillIndex = function() {
         for (var i=0; i < numDays; i++) {
             $("<th />", {
                 "class": "date",
-                text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()
+                text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
             }).insertAfter(today);
             d = new Date(d.getTime() + 86400000);
         }
