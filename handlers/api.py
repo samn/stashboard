@@ -53,7 +53,7 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service, Level
+from models import Status, Event, Service, Level, Region
 import config
 
 def aware_to_naive(d):
@@ -490,3 +490,11 @@ class LevelsListHandler(restful.Controller):
             
             self.error(404, "API Version %s not supported" % version)
 
+class RegionsListHandler(restful.Controller):
+    def get(self, version):
+        logging.debug("RegionsListHandler#get")
+
+        if (self.valid_version(version)):
+            self.json({"regions": Region.all_regions()})
+        else:
+            self.error(404, "API Version %s not supported" % version)

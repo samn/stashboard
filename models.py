@@ -71,6 +71,14 @@ class Region(db.Model):
     """ Represents the physical location of a Service """
     name = db.StringProperty(required=True)
 
+    @staticmethod
+    def all_regions():
+        """ Return a list of all regions """
+        regions = []
+        for region in Region.all().fetch(100):
+            regions.append({"name": str(region.name)})
+        return regions
+
 class Service(db.Model):
     """A service to track
 
