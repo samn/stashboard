@@ -29,6 +29,7 @@
         
         {% if user_is_admin %}
           <a id="add-service" class="button" href="#">Add New Service</a>
+          <a id="add-region" class="button" href="#">Add New Region</a>
         {% endif %}
         
         {% include "_legend.html" %}
@@ -44,6 +45,11 @@
         <label for="service-description">Description</label>
         <textarea
           id="service-description" name="service-description"></textarea>
+      </div>
+
+      <div class="dialog" id="add-region-modal" title="Add New Region">
+        <label  for="region-name">Name</label>
+        <input type="text" id="region-name"name="region-name">
       </div>
       
       {% endif %}
