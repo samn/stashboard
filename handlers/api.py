@@ -507,3 +507,23 @@ class RegionsListHandler(restful.Controller):
             self.json({"regions": Region.all_regions()})
         else:
             self.error(404, "API Version %s not supported" % version)
+
+    @authorized.api("admin")
+    def post(self, version):
+        logging.debug("RegionListHandler#post")
+
+        if (self.valid_version(version)):
+            name = self.request.get('name', default_value=None)
+
+            if name:
+                existing_r = Region.get_by_name(name)
+                if existing_r:
+                    self.error(400, 'Bad Data: Name %s already in use.' % name)
+                else: # Create new region
+                    r = Region(name=name) 
+                    r.put()
+
+            else:
+                self.error(400, "Bad Data: Name: %s" % name)
+        else:
+            self.error(404, "API Version %s not supported" % version)

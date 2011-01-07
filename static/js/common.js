@@ -527,6 +527,42 @@ stashboard.fillIndex = function() {
             }
         }
     });
+
+    $("#add-region").click(function(){
+        $("#add-region-modal").dialog('open');
+    });
+
+    $("#add-region-modal").dialog({
+        height: 170,
+        width: 460,
+        resizable: false,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            'Create Region': function(){
+                $.ajax({ 
+                    type: "POST",
+                    url: "/api/v1/regions",
+                    data: { 
+                        name: $("#region-name").val()
+                    },
+                    dataType: 'json', 
+                    context: $("#service-list"), 
+                    success: function(data){ 
+                        $("#add-region-modal").dialog('close');
+                    },
+                    error: function(evt){ 
+                        $("#add-region-modal").dialog('close');
+                        stashboard.error("Could not create region. Make sure Name is valid");
+                    }
+                });
+
+            },
+            'Cancel': function(){
+                $(this).dialog('close');
+            }
+        }
+    });
 };
 
 stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
