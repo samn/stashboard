@@ -24,6 +24,7 @@ from wsgiref.handlers import format_date_time
 from time import mktime
 from datetime import timedelta
 from datetime import date
+from utils import slugify
 import config
 import urlparse
 
@@ -184,6 +185,10 @@ class Service(db.Model):
             m["current-event"] = None
 
         return m
+
+    @staticmethod
+    def slugify(name, region=''):
+        return slugify.slugify(region + name)
 
 class Status(db.Model):
     """A possible system status
