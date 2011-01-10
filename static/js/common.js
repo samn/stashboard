@@ -840,15 +840,18 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                                 url: "/api/v1/services/" + service.id,
                                 data: { 
                                     name: $("#service-name").val(), 
-                                    description: $("#service-description").val()
+                                    description: $("#service-description").val(),
+                                    region: $("#service-region").val()
                                 },
                                 dataType: 'json', 
                                 success: function(data){ 
                                     $("#edit-service-modal").dialog('close');
                                     $("#serviceDescription").text(data.description);
+                                    $("#serviceRegion").text(data.region);
                                     $("h2 span").text(data.name);
                                     $("#service-name").val(data.name);
                                     $("#service-description").val(data.description);
+                                    $("#service-region").val(data.region);
                                 },
                                 error: function(evt){ 
                                     $("#edit-service-modal").dialog('close');
