@@ -24,6 +24,7 @@ from wsgiref.handlers import format_date_time
 from time import mktime
 from datetime import timedelta
 from datetime import date
+from utils import slugify
 import config
 import urlparse
 
@@ -70,12 +71,16 @@ class Level(object):
 class Region(db.Model):
     """ Represents the physical location of a Service """
     name = db.StringProperty(required=True)
+    # the order of this region in the region tabbar
+    # an index of 3142 indicates that the region has not been
+    # given an explicit order, and will be shown at the end of the list
+    index = db.IntegerProperty(required=True, default=3142)
 
     @staticmethod
     def all_regions():
-        """ Return a list of all regions """
+        """ Return a list of all regions ordered by index """
         regions = []
-        for region in Region.all().fetch(100):
+        for region in Region.all().order("index").fetch(100):
             regions.append({"name": str(region.name)})
         return regions
 
@@ -184,6 +189,10 @@ class Service(db.Model):
             m["current-event"] = None
 
         return m
+
+    @staticmethod
+    def slugify(name, region=''):
+        return slugify.slugify(region + name)
 
 class Status(db.Model):
     """A possible system status
