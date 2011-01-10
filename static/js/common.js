@@ -553,7 +553,7 @@ stashboard.fillIndex = function() {
                     },
                     error: function(evt){ 
                         $("#add-region-modal").dialog('close');
-                        stashboard.error("Could not create region. Make sure Name is valid");
+                        stashboard.error("Could not create region. Make sure Name is unique");
                     }
                 });
 
