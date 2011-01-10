@@ -192,7 +192,7 @@ class Service(db.Model):
 
     @staticmethod
     def slugify(name, region=''):
-        return slugify.slugify(region + name)
+        return slugify.slugify(region +'-' + name)
 
 class Status(db.Model):
     """A possible system status

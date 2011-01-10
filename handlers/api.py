@@ -109,7 +109,6 @@ class ServicesListHandler(restful.Controller):
                 if existing_s:
                     existing_s.description = description
                     if region:
-                        # TODO: delete a region from service
                         existing_s.region = Region.get_by_name(region)
                     existing_s.put()
                     self.json(existing_s.rest(self.base_url(version)))
