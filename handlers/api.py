@@ -110,6 +110,7 @@ class ServicesListHandler(restful.Controller):
                     existing_s.description = description
                     if region:
                         existing_s.region = Region.get_by_name(region)
+                        existing_s.slug = Service.slugify(name, region)
                     existing_s.put()
                     self.json(existing_s.rest(self.base_url(version)))
                 # Create new service
@@ -159,6 +160,7 @@ class ServiceInstanceHandler(restful.Controller):
                     service.region = Region.get_by_name(region)
                 
                 if name or description or region:
+                    service.slug = Service.slugify(service.name, service.region.name)
                     service.put()
                     
                 self.json(service.rest(self.base_url(version)))   
