@@ -73,11 +73,14 @@ class ServicesListHandler(restful.Controller):
     def get(self, version):
         logging.debug("ServicesListHandler#get")
         if (self.valid_version(version)):
+            region = self.request.get('region', default_value=None)
             
             query = Service.all().order('name')
+            if region:
+                r = Region.get_by_name(region)
+                query.filter("region = ", r)
+
             data = []
-
-
             for s in query:
                 data.append(s.rest(self.base_url(version)))
 

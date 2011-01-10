@@ -59,7 +59,7 @@ from google.appengine.api import users
 import oauth2 as oauth
 from handlers import restful
 from utils import authorized
-from models import Status, Service, Event, Profile, AuthRequest
+from models import Status, Service, Event, Profile, AuthRequest, Region
 
 import config
 
@@ -149,10 +149,13 @@ class RootHandler(restful.Controller):
             end_date = today
             start_date = end_date - timedelta(days=5)
 
+        regions = Region.all_regions()
+
         td = default_template_data()
         td["start_date"] = start_date - timedelta(days=1)
         td["end_date"] = end_date - timedelta(days=1)
         td["history_size"] = history_size
+        td["regions"] = regions
 
         self.render(td, 'index.html')
         
