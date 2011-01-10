@@ -134,12 +134,8 @@ class RootHandler(restful.Controller):
     
     @authorized.force_ssl(only_admin=True)
     def get(self):
-        user = users.get_current_user()
         logging.debug("RootHandler#get")
         
-        q = Service.all()
-        q.order("name")
-
         today = datetime.datetime.today()
         end = today
         start = end - timedelta(days=5)
@@ -152,12 +148,11 @@ class RootHandler(restful.Controller):
         today.toordinal() - history_size > start_date.toordinal():
             end_date = today
             start_date = end_date - timedelta(days=5)
-        
+
         td = default_template_data()
         td["start_date"] = start_date - timedelta(days=1)
         td["end_date"] = end_date - timedelta(days=1)
         td["history_size"] = history_size
-        td["past"] = get_past_days(5)
 
         self.render(td, 'index.html')
         
