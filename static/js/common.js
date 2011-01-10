@@ -435,7 +435,7 @@ stashboard.fillIndex = function() {
 
     $.ajax({ 
         type: "GET",
-        url: "/api/v1/services",
+        url: "/api/v1/services?region="+$("#tabs a:first").html(),
         dataType: 'json', 
         success: function(data){ 
             stashboard.services = data.services
