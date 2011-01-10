@@ -261,6 +261,26 @@ stashboard.fillIndex = function() {
         }
     };
 
+    updateTable = function() {
+        var tbody = renderServices(stashboard.services);
+        $(".services-body").html(tbody.html());
+        $('.date').remove();
+        createDates(numDays);
+    };
+
+    $('#tabs').tabs({
+        select: function(event, ui) {
+            $.ajax({
+                url: '/api/v1/services?region='+$(ui.tab).html(),
+                dataType: 'json',
+                success: function(data) {
+                    stashboard.services = data.services
+                    updateTable();
+                }
+            });
+        }
+    });
+
     $('th.today').prev().append(
         $('<a />', {
             'class': 'arrow',
@@ -274,13 +294,7 @@ stashboard.fillIndex = function() {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
-            var tbody = renderServices(stashboard.services);
-            $(".services-body")
-                .after(tbody)
-                .remove()
-                .show();
-            $('.date').remove();
-            createDates(numDays);
+            updateTable();
         })
     );
         
@@ -298,14 +312,7 @@ stashboard.fillIndex = function() {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
-
-            var tbody = renderServices(stashboard.services);
-            $(".services-body")
-                .after(tbody)
-                .remove()
-                .show();
-            $('.date').remove();
-            createDates(numDays);
+            updateTable();
         })
     ).appendTo(thead);
 
