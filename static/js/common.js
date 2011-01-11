@@ -582,7 +582,7 @@ stashboard.adminRegionTabs = function() {
             });
             $.ajax({
                 type: 'POST',
-                url: '/api/v1/regions',
+                url: '/api/v1/regions/indexes',
                 data: {regions: list.toString()}
             });
         }

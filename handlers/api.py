@@ -531,3 +531,29 @@ class RegionsListHandler(restful.Controller):
                 self.error(400, "Bad Data: Name: %s" % name)
         else:
             self.error(404, "API Version %s not supported" % version)
+
+class RegionsIndexHandler(restful.Controller):
+    @authorized.api("admin")
+    def post(self, version):
+        logging.debug("RegionIndexHandler#post")
+
+        if (self.valid_version(version)):
+            order = self.request.get('regions', default_value=None)
+
+            if order:
+                order = order.split(',')
+                indexes = {}
+                for idx, el in enumerate(order):
+                    indexes[el] = idx
+
+                regions = Region.all().fetch(100)
+                for region in regions:
+                    if indexes[region.name] != None:
+                        region.index = indexes[region.name]
+                db.put(regions)
+
+            else:
+                self.error(400, "Bad Data: Missing Order")
+        else:
+            self.error(404, "API Version %s not supported" % version)
+
