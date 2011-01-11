@@ -37,7 +37,7 @@ logging.info("Starting application in DEBUG mode: %s", DEBUG)
 SITE = {
     "html_type": "text/html",
     "charset": "utf-8",
-    "title": "Stashboard",
+    "title": "Brightcove Status",
     "author": "Kyle Conroy",
     # This must be the email address of a registered administrator for the 
     # application due to mail api restrictions.
