@@ -7,6 +7,9 @@
         stashboard.endDate = new Date("{{end_date|date:"Y/n/j"}}"); 
         stashboard.historySize = {{history_size}}
         stashboard.fillIndex();
+        {% if user_is_admin %}
+        stashboard.adminRegionTabs();
+        {% endif %}
       });
     </script>
 {% endblock %}
@@ -14,7 +17,12 @@
 {% block content %}
 
       <div id="webservices" class="frame">
-        
+
+        {% if user_is_admin %}
+          <div>
+              <p>Drag Region Tabs to Reorder</p>
+          </div>
+        {% endif %}
           <div id="tabs">
               <ul>
               {% for region in regions %}

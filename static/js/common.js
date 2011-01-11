@@ -572,6 +572,24 @@ stashboard.fillIndex = function() {
     });
 };
 
+stashboard.adminRegionTabs = function() {
+    $("#tabs").tabs().find(".ui-tabs-nav").sortable({
+        axis: "x",
+        update: function(event, ui) {
+            var list = [];
+            $(this).children().each(function(idx) {
+                list[idx] = $(this).children().html();
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/api/v1/regions',
+                data: {regions: list.toString()}
+            });
+        }
+    });
+    
+};
+
 stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
     var createRow = function(data) {
         var d = new Date(data.timestamp);
