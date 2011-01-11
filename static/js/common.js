@@ -270,6 +270,7 @@ stashboard.fillIndex = function() {
 
     $('#tabs').tabs({
         select: function(event, ui) {
+            $('.services-body').html("<p>Loading...</p>");
             $.ajax({
                 url: '/api/v1/services?region='+$(ui.tab).html(),
                 dataType: 'json',
