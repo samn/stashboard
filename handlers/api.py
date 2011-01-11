@@ -109,8 +109,8 @@ class ServicesListHandler(restful.Controller):
                 if existing_s:
                     existing_s.description = description
                     if region:
-                        # TODO: delete a region from service
                         existing_s.region = Region.get_by_name(region)
+                        existing_s.slug = Service.slugify(name, region)
                     existing_s.put()
                     self.json(existing_s.rest(self.base_url(version)))
                 # Create new service
@@ -160,6 +160,7 @@ class ServiceInstanceHandler(restful.Controller):
                     service.region = Region.get_by_name(region)
                 
                 if name or description or region:
+                    service.slug = Service.slugify(service.name, service.region.name)
                     service.put()
                     
                 self.json(service.rest(self.base_url(version)))   
@@ -530,3 +531,29 @@ class RegionsListHandler(restful.Controller):
                 self.error(400, "Bad Data: Name: %s" % name)
         else:
             self.error(404, "API Version %s not supported" % version)
+
+class RegionsIndexHandler(restful.Controller):
+    @authorized.api("admin")
+    def post(self, version):
+        logging.debug("RegionIndexHandler#post")
+
+        if (self.valid_version(version)):
+            order = self.request.get('regions', default_value=None)
+
+            if order:
+                order = order.split(',')
+                indexes = {}
+                for idx, el in enumerate(order):
+                    indexes[el] = idx
+
+                regions = Region.all().fetch(100)
+                for region in regions:
+                    if indexes[region.name] != None:
+                        region.index = indexes[region.name]
+                db.put(regions)
+
+            else:
+                self.error(400, "Bad Data: Missing Order")
+        else:
+            self.error(404, "API Version %s not supported" % version)
+

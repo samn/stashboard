@@ -22,17 +22,28 @@ from google.appengine.ext import db
 from models import Status, Service, Event, Region
 from datetime import datetime, timedelta, date
 
-foo = Service(name="Service Foo", slug="service-foo",
+na = Region(name="North America")
+na.put()
+
+emea = Region(name="EMEA")
+emea.put()
+
+foo = Service(name="Service Foo", slug="service-foo", region=na,
               description="Scalable and reliable foo service across the globe")
+foo.slug = Service.slugify(foo.name, foo.region.name)
 foo.put()
-bar = Service(name="Service Bar", slug="service-bar",
+
+bar = Service(name="Service Bar", slug="service-bar", region=emea,
              description="Scalable and reliable foo service")
+bar.slug = Service.slugify(bar.name, bar.region.name)
 bar.put()
-delete = Service(name="Delete Me", slug="delete", 
+
+delete = Service(name="Delete Me", slug="delete", region=na,
                 description="Delete Me Please")
+delete.slug = Service.slugify(delete.name, delete.region.name)
 delete.put()
 
-bar = Service.get_by_slug("service-bar")
+bar = Service.get_by_slug("emea-service-bar")
 cat = Status.get_by_slug("down")        
 
 dates = [
@@ -47,9 +58,4 @@ for d in dates:
     e = Event(service=bar, status=cat, 
           message="Error fine", start=d)
     e.put()
-
-regions = ["North America", "EMEA"]
-for region in regions:
-    r =  Region(name=region)
-    r.put()
 
