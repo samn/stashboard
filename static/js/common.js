@@ -533,6 +533,9 @@ stashboard.fillIndex = function() {
             'Cancel': function(){
                 $(this).dialog('close');
             }
+        },
+        close: function() {
+            $(this).children().val("");
         }
     });
 
@@ -569,6 +572,9 @@ stashboard.fillIndex = function() {
             'Cancel': function(){
                 $(this).dialog('close');
             }
+        },
+        close: function() {
+            $(this).children().val("");
         }
     });
 };
@@ -1008,6 +1014,10 @@ stashboard.fillAnnouncements = function(isAdmin) {
                     'Cancel': function(){
                         $(this).dialog('close');
                     }
+                },
+                close: function() {
+                    $(this).children('#announcement-message').val(''); 
+                    $(this).children('#announcement-region').children('[value!=""]').remove();
                 }
             });
         });
