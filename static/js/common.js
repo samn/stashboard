@@ -533,6 +533,9 @@ stashboard.fillIndex = function() {
             'Cancel': function(){
                 $(this).dialog('close');
             }
+        },
+        close: function() {
+            $(this).children().val("");
         }
     });
 
@@ -569,6 +572,9 @@ stashboard.fillIndex = function() {
             'Cancel': function(){
                 $(this).dialog('close');
             }
+        },
+        close: function() {
+            $(this).children().val("");
         }
     });
 };
@@ -945,15 +951,35 @@ stashboard.fillAnnouncements = function(isAdmin) {
 
     var renderAnnouncement = function(announcement) {
         var d = new Date(announcement.last_updated);
-        return $("<div />", {"class": "announcement"})
-                .append($("<div />", {
-                    "class": "announcement-date",
-                    "html": (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
-                }))
-                .append($("<div />", {
-                    "class": "announcement-message",
-                    "html": announcement.message
-                }));
+        var el = $("<div />", {"class": "announcement"});
+        if (announcement.region) {
+            el.attr('title', announcement.region);
+        }
+
+        var date = $("<div />", {
+            "class": "announcement-date",
+            "html": (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
+        });
+
+        if (isAdmin) {
+            date.append($('<a />', {
+                'href': '/api/v1/announcements?key='+announcement.key,
+                'text': 'Edit',
+                'class': 'edit-announcement'
+            }));
+            date.append($('<a />', {
+                'href': '/api/v1/announcements?key='+announcement.key,
+                'text': 'Delete',
+                'class': 'delete-announcement',
+            }));
+        }
+        el.append(date);
+
+        el.append($("<div />", {
+            "class": "announcement-message",
+            "html": announcement.message
+        }));
+        return el;
     }
 
     var updateAnnouncements = function(announcements) {
@@ -970,46 +996,95 @@ stashboard.fillAnnouncements = function(isAdmin) {
             var announcement = renderAnnouncement(announcements[i]);
             announceDiv.append(announcement);
         }
+
     }
 
     if (isAdmin) {
+        $("#add-announcement-modal").dialog({
+            height: 300,
+            width: 460,
+            resizable: false,
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                'Post': function(evt){
+                    var region = $("#announcement-region").val()
+                    $.ajax({ 
+                        type: "POST",
+                        url: $('#add-announcement-url').val(),
+                        data: { 
+                            message: $("#announcement-message").val(), 
+                            region: region
+                        },
+                        dataType: 'json', 
+                        success: function(data){ 
+                            $("#add-announcement-modal").dialog('close');
+                        },
+                        error: function(){ 
+                            $("#add-announcement-modal").dialog('close');
+                        }
+                    });
+                },
+                'Cancel': function(){
+                    $(this).dialog('close');
+                }
+            },
+            close: function() {
+                $(this).children('#announcement-message').val(''); 
+                $(this).children('#announcement-region').children('[value!=""]').remove();
+            }
+        });
+
         $("#add-announcement").click(function() {
-
+            $('#add-announcement-url').val('/api/v1/announcements');
             stashboard.populateRegions($('#announcement-region'));
+            $('#add-announcement-modal').dialog('open');
+        });
 
-            $("#add-announcement-modal").dialog({
-                height: 300,
-                width: 460,
+        $('.delete-announcement').live('click', function(evt) {
+            evt.preventDefault();
+            var a = $(evt.target);
+            $('#delete-announcement-modal').dialog({
                 resizable: false,
-                autoOpen: true,
+                height: 120,
+                width: 460,
                 modal: true,
                 buttons: {
-                    'Post': function(){
-                        var region = $("#announcement-region").val()
-                        if (region == "") {
-                            region = null;
-                        }
-                        $.ajax({ 
-                            type: "POST",
-                            url: '/api/v1/announcements',
-                            data: { 
-                                message: $("#announcement-message").val(), 
-                                region: region
-                            },
-                            dataType: 'json', 
-                            success: function(data){ 
-                                $("#add-announcement-modal").dialog('close');
-                            },
-                            error: function(){ 
-                                $("#add-announcement-modal").dialog('close');
+                    'Remove Announcement': function() {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: a.attr('href'),
+                            success: function() {
+                                a.parentsUntil('.announcement').parent().remove();
+                                $("#delete-announcement-modal").dialog('close');
                             }
                         });
                     },
-                    'Cancel': function(){
-                        $(this).dialog('close');
-                    }
-                }
-            });
+                   'Cancel': function() {
+                      $(this).dialog('close');
+                  }
+              }
+          });
+        });
+
+        $('.edit-announcement').live('click', function(evt) {
+            evt.preventDefault();
+            var a = $(evt.target);
+            $('#add-announcement-url').val(a.attr('href'));
+            var message = a.parent().next().html();
+            $("#announcement-message").val(message);
+
+            var select = $("#announcement-region");
+            var region = a.parentsUntil('.announcement').parent().attr('title');
+            if (region) {
+                select.append($('<option />', {
+                    value: region,
+                    text: region,
+                    selected: true
+                }));
+            }
+            stashboard.populateRegions(select);
+            $('#add-announcement-modal').dialog('open');
         });
     }
 }

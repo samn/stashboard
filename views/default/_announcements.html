@@ -4,12 +4,17 @@
 {% if user_is_admin %}
 <a id="add-announcement" class="button" href="#">Add New Announcement</a>
 <div class="dialog" id="add-announcement-modal" title="Add New announcement">
-    <label for="announcement-message">message</label>
+    <label for="announcement-message">Message</label>
     <textarea id="announcement-message" name="announcement-message"></textarea>
     <label  for="announcement-region">Region</label>
     <select type="text" id="announcement-region" name="announcement-region">
         <option value="">All</option>
     </select>
+    <input type="hidden" id="add-announcement-url" />
+</div>
+
+<div class="dialog" id="delete-announcement-modal" title="Delete Announcement">
+    <p>Are you sure you want to remove this announcement?</p>
 </div>
 {% endif %}
 
