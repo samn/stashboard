@@ -609,7 +609,8 @@ class AnnouncementsListHandler(restful.Controller):
 
             if key:
                 a = Announcement.get(key)
-                a.delete()
+                a.active = false
+                a.put()
             else:
                 self.error(400, "Bad Data: Missing Key")
         else:
