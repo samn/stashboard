@@ -261,7 +261,7 @@ stashboard.fillIndex = function() {
         }
     };
 
-    updateTable = function() {
+    var updateTable = function() {
         var tbody = renderServices(stashboard.services);
         $(".services-body").html(tbody.html());
         $('.date').remove();
@@ -834,25 +834,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
             $("#edit-service").click(function(e){
                 e.preventDefault();
 
-                // populate the regions dropdown
-                $.ajax({
-                    type: 'GET',
-                    url: '/api/v1/regions',
-                    dataType: 'json',
-                    success: function(data) {
-                        var select = $('#service-region');
-                        var existing = select.children().val();
-                        var regions = data.regions;
-                        for (var i=0, l=regions.length; i < l; i++) {
-                            if (regions[i].name != existing) {
-                                $('<option />', {
-                                  'value': data.regions[i].name,
-                                  'text': data.regions[i].name
-                                }).appendTo(select);
-                            }
-                        }
-                    }
-                });
+                stashboard.populateRegions($('#service-region'));
 
                 $("#edit-service-modal").dialog({
                     height: 360,
@@ -915,4 +897,117 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         });
     });
 };
+
+stashboard.populateRegions = function(select) {
+    // fetch the list  of regions and add them to a select element.
+    //  assumes the select element is empty or only contains
+    //  one element (and doesn't repeat that element).
+    //  see usage in stashboard.fillService
+    $.ajax({
+        type: 'GET',
+        url: '/api/v1/regions',
+        dataType: 'json',
+        success: function(data) {
+            var regions = data.regions;
+            var selected = select.children().filter(':selected').val();
+            for (var i=0, l=regions.length; i < l; i++) {
+                if (regions[i].name != selected) {
+                    $('<option />', {
+                        'value': data.regions[i].name,
+                        'text': data.regions[i].name
+                    }).appendTo(select);
+                }
+            }
+        }
+    });
+}
   
+stashboard.fillAnnouncements = function(isAdmin) {
+
+    $('#tabs').bind("tabsselect", function(event, ui) {
+        fetchAnnouncements($(ui.tab).html());
+    });
+
+    var fetchAnnouncements = function(region) {
+        $.ajax({ 
+            type: "GET",
+            url: '/api/v1/announcements?region=' + region,
+            dataType: 'json', 
+            success: function(data){ 
+                updateAnnouncements(data.announcements);
+            }
+        });
+    }
+
+    // bootstrap the announcements display, since the tabsselect event 
+    //  might fire too early during startup
+    fetchAnnouncements($('#tabs > ul > li').first().children().html());
+
+    var renderAnnouncement = function(announcement) {
+        var d = new Date(announcement.last_updated);
+        return $("<div />", {"class": "announcement"})
+                .append($("<div />", {
+                    "class": "announcement-date",
+                    "html": (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
+                }))
+                .append($("<div />", {
+                    "class": "announcement-message",
+                    "html": announcement.message
+                }));
+    }
+
+    var updateAnnouncements = function(announcements) {
+        var announceDiv = $("#announcements");
+        var len = announcements.length
+        if (len < 1) { 
+            $('#announcements-title').remove();
+            return;
+        }
+        announceDiv.empty();
+        for (var i=0; i < len; i++) {
+            var announcement = renderAnnouncement(announcements[i]);
+            announceDiv.append(announcement);
+        }
+    }
+
+    if (isAdmin) {
+        $("#add-announcement").click(function() {
+
+            stashboard.populateRegions($('#announcement-region'));
+
+            $("#add-announcement-modal").dialog({
+                height: 300,
+                width: 460,
+                resizable: false,
+                autoOpen: true,
+                modal: true,
+                buttons: {
+                    'Post': function(){
+                        var region = $("#announcement-region").val()
+                        if (region == "") {
+                            region = null;
+                        }
+                        $.ajax({ 
+                            type: "POST",
+                            url: '/api/v1/announcements',
+                            data: { 
+                                message: $("#announcement-message").val(), 
+                                region: region
+                            },
+                            dataType: 'json', 
+                            success: function(data){ 
+                                $("#add-announcement-modal").dialog('close');
+                            },
+                            error: function(){ 
+                                $("#add-announcement-modal").dialog('close');
+                            }
+                        });
+                    },
+                    'Cancel': function(){
+                        $(this).dialog('close');
+                    }
+                }
+            });
+        });
+    }
+}

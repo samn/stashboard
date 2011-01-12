@@ -53,7 +53,7 @@ from google.appengine.ext import db
 from handlers import restful
 from utils import authorized
 from utils import slugify
-from models import Status, Event, Service, Level, Region
+from models import Status, Event, Service, Level, Region, Announcement
 import config
 
 def aware_to_naive(d):
@@ -556,4 +556,40 @@ class RegionsIndexHandler(restful.Controller):
                 self.error(400, "Bad Data: Missing Order")
         else:
             self.error(404, "API Version %s not supported" % version)
+
+
+class AnnouncementsListHandler(restful.Controller):
+    def get(self, version):
+        logging.debug("AnnouncementsListHandler#get")
+
+        region = self.request.get('region', default_value=None)
+        if region:
+            region = Region.get_by_name(region)
+
+        if (self.valid_version(version)):
+            self.json({"announcements": Announcement.get_active(region)})
+        else:
+            self.error(404, "API Version %s not supported" % version)
+
+    @authorized.api("admin")
+    def post(self, version):
+        logging.debug("AnnouncementsListHandler#post")
+
+        if (self.valid_version(version)):
+            message = self.request.get('message', default_value=None)
+            region = self.request.get('region', default_value=None)
+
+            if message:
+                a = Announcement(message=message)
+                if region:
+                    region = Region.get_by_name(region)
+                    a.region = region
+                a.put()
+
+            else:
+                self.error(400, "Bad Data: Missing Message")
+        else:
+            self.error(404, "API Version %s not supported" % version)
+
+
 

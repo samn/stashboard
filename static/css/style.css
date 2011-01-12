@@ -214,3 +214,19 @@ a.arrow {
     float:right;
 }
 
+#announcements-title {
+    font-weight: bold;
+}
+
+div.announcement {
+    padding: 10px; 
+}
+
+div.announcement-date {
+    font-weight: bold;
+    padding: 5px;
+}
+
+div.announcement-message {
+    padding-left: 10px;
+}
