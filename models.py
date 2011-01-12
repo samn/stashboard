@@ -325,3 +325,41 @@ class AuthRequest(db.Model):
 
 class Setting(db.Model):
     name = db.StringProperty(required=True)
+
+class Announcement(db.Model):
+    """An announcement on the front page of the site,
+        a general status field.
+       
+       Messages can be restricted to a specific region
+         or displayed for all.
+
+        Properties:
+        message        -- text: The message to display
+        active         -- boolean: If False the message won't be displayed
+        last_updated  -- datetime: The last modified date
+        region         -- region: The region that the message is located in
+                                    if none the message will be displayed 
+                                    for all regions.
+    """
+    message = db.TextProperty(required=True)
+    active = db.BooleanProperty(required=False, default=True)
+    last_updated = db.DateTimeProperty(required=True, auto_now=True)
+    region = db.ReferenceProperty(Region, required=False, default=None)
+
+    @staticmethod
+    def get_active(region=None):
+        q = Announcement.all()
+        q.order("-last_updated")
+        q.filter('active = ', True)
+        q.filter('region IN ', (None, region))
+        
+        announcements = []
+        for announcement in q.fetch(100):
+            d = {}
+            d['message'] = str(announcement.message)
+            d['last_updated'] = announcement.last_updated.strftime('%m/%d/%Y')
+            if announcement.region:
+                d['region'] = str(announcement.region.name)
+            announcements.append(d)
+
+        return announcements
