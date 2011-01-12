@@ -579,12 +579,20 @@ class AnnouncementsListHandler(restful.Controller):
         if (self.valid_version(version)):
             message = self.request.get('message', default_value=None)
             region = self.request.get('region', default_value=None)
+            key = self.request.get('key', default_value=None)
 
             if message:
-                a = Announcement(message=message)
+                if key: # modify an existing announcement
+                    a = Announcement.get(key)
+                    a.message = message
+                else: # create a new announcement
+                    a = Announcement(message=message)
+
                 if region:
                     region = Region.get_by_name(region)
                     a.region = region
+                else:
+                    a.region = None
                 a.put()
 
             else:
@@ -592,5 +600,17 @@ class AnnouncementsListHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
 
+    @authorized.api("admin")
+    def delete(self, version):
+        logging.debug("AnnouncementsListHandler#delete")
 
+        if (self.valid_version(version)):
+            key = self.request.get('key', default_value=None)
 
+            if key:
+                a = Announcement.get(key)
+                a.delete()
+            else:
+                self.error(400, "Bad Data: Missing Key")
+        else:
+            self.error(404, "API Version %s not supported" % version)

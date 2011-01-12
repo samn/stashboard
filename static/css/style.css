@@ -228,6 +228,12 @@ div.announcement-date {
     padding: 5px;
 }
 
+div.announcement-date a {
+    text-decoration: underline;
+    font-weight: normal;
+    padding-left: 5px;
+}
+
 div.announcement-message {
     padding-left: 10px;
 }

@@ -357,6 +357,7 @@ class Announcement(db.Model):
         for announcement in q.fetch(100):
             d = {}
             d['message'] = str(announcement.message)
+            d['key'] = str(announcement.key())
             d['last_updated'] = announcement.last_updated.strftime('%m/%d/%Y')
             if announcement.region:
                 d['region'] = str(announcement.region.name)
