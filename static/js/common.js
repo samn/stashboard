@@ -959,10 +959,12 @@ stashboard.fillAnnouncements = function(isAdmin) {
     var updateAnnouncements = function(announcements) {
         var announceDiv = $("#announcements");
         var len = announcements.length
-        if (len < 1) { 
-            $('#announcements-title').remove();
-            return;
+        if (len > 0) { 
+            $('#announcements-title').show();
+        } else {
+            $('#announcements-title').hide();
         }
+
         announceDiv.empty();
         for (var i=0; i < len; i++) {
             var announcement = renderAnnouncement(announcements[i]);

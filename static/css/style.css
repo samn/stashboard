@@ -216,6 +216,7 @@ a.arrow {
 
 #announcements-title {
     font-weight: bold;
+    display: none;
 }
 
 div.announcement {

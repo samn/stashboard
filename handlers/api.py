@@ -546,11 +546,12 @@ class RegionsIndexHandler(restful.Controller):
                 for idx, el in enumerate(order):
                     indexes[el] = idx
 
-                regions = Region.all().fetch(100)
-                for region in regions:
+                updated = []
+                for region in Region.all().fetch(100):
                     if indexes[region.name] != None:
                         region.index = indexes[region.name]
-                db.put(regions)
+                        updated.append(region)
+                db.put(updated)
 
             else:
                 self.error(400, "Bad Data: Missing Order")
