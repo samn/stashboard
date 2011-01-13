@@ -47,9 +47,9 @@ SITE = {
     "author": "Kyle Conroy",
     # This must be the email address of a registered administrator for the
     # application due to mail api restrictions.
-    "email": "kyle.j.conroy@gmail.com",
-    "description": "A RESTful Status Tracker on top of App Engine.",
-    "root_url": "http://stashboard.appspot.com",
+    "email": "samneubardt@gmail.com",
+    "description": "Information About the Status of the Brightcove Service",
+    "root_url": "http://brightcovestatus.appspot.com",
     "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
     "rich_client": True, #If false, the website will go into a simplified read-only view
     "history_size": 30 # How far back can people look (in days)
