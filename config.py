@@ -1,15 +1,15 @@
 # Copyright (c) 2010 Twilio Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,12 +34,18 @@ VERSION = "1.1.6"
 DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
 logging.info("Starting application in DEBUG mode: %s", DEBUG)
 
+# True to enable PubSubHubBub
+PUBSUBHUBBUB = True
+
+# PubSubHubBub hub url
+PUBSUBHUBBUB_URL = 'http://pubsubhubbub.appspot.com'
+
 SITE = {
     "html_type": "text/html",
     "charset": "utf-8",
     "title": "Brightcove Status",
     "author": "Kyle Conroy",
-    # This must be the email address of a registered administrator for the 
+    # This must be the email address of a registered administrator for the
     # application due to mail api restrictions.
     "email": "kyle.j.conroy@gmail.com",
     "description": "A RESTful Status Tracker on top of App Engine.",
