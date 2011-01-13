@@ -324,10 +324,19 @@ stashboard.fillIndex = function() {
         var imageRow = defaultImage;
         var tr = $('<tr />', {id: data.id});
 
+        var slug = data.url.substr(data.url.lastIndexOf('/')+1);
         $('<td />').append(
             $('<a />', {
                 href: 'services/' + data.id,
                 text: data.name
+            })
+        ).append(
+            $('<a />', { 
+                'class': 'feed-icon',
+                href: "/feed/services/" + slug + "/events",
+                html: $("<img />", {
+                    src: '/images/feed-icon.png'
+                })
             })
         ).appendTo(tr);
 
