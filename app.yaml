@@ -16,6 +16,10 @@ handlers:
 #  script: runner.py
 #  login: required
 
+- url: /tasks/notify_hub
+  script: handlers/workers.py
+  login: admin
+
 - url: /css
   static_dir: static/css
 
@@ -24,7 +28,7 @@ handlers:
 
 - url: /js
   static_dir: static/js
-  
+
 - url: /widget
   static_dir: static/widget
 
@@ -35,7 +39,7 @@ handlers:
 - url: /robots\.txt
   static_files: static/robots.txt
   upload: static/robots.txt
-  
+
 - url: .*
   script: main.py
   secure: optional

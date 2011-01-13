@@ -1,0 +1,3 @@
+queue:
+- name: hub-notifications
+  rate: 1/s
