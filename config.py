@@ -44,7 +44,7 @@ SITE = {
     "html_type": "text/html",
     "charset": "utf-8",
     "title": "Brightcove Status",
-    "author": "Kyle Conroy",
+    "author": "Brightcove Inc.",
     # This must be the email address of a registered administrator for the
     # application due to mail api restrictions.
     "email": "samneubardt@gmail.com",
