@@ -35,7 +35,7 @@ DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
 logging.info("Starting application in DEBUG mode: %s", DEBUG)
 
 # True to enable PubSubHubBub
-PUBSUBHUBBUB = True
+PUBSUBHUBBUB = False
 
 # PubSubHubBub hub url
 PUBSUBHUBBUB_URL = 'http://pubsubhubbub.appspot.com'

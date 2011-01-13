@@ -16,9 +16,9 @@ handlers:
 #  script: runner.py
 #  login: required
 
-- url: /tasks/notify_hub
-  script: handlers/workers.py
-  login: admin
+#- url: /tasks/notify_hub
+#  script: handlers/workers.py
+#  login: admin
 
 - url: /css
   static_dir: static/css
