@@ -24,7 +24,7 @@
         <sb:service>{{ event.service.name }}</sb:service>
         <sb:timestamp>{{ event.start|date:"Y-m-d\TH:i:s\Z" }}</sb:timestamp>
         <sb:message>{{ event.message }}</sb:message>
-        <sb:url>{{ config.SITE.root_url }}/services/{{ event.service.key }}</sb:url>
+        <sb:url>{{ config.SITE.root_url }}/services/{{ event.service.slug }}</sb:url>
         <sb:status>
             <sb:id>{{ event.status.key }}</sb:id>
             <title>{{ event.status.name }}</title>
