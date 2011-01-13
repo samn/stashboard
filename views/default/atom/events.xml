@@ -20,11 +20,13 @@
         <author>
             <name>{{ config.SITE.author }}</name>
         </author>
+        <link href="{{ config.SITE.root_url }}/services/{{ event.service.slug }}/{{ event.start|date:"Y/m/d" }}" />
+        <content>{{ event.message }}</content>
         <sb:id>{{ event.key }}</sb:id>
         <sb:service>{{ event.service.name }}</sb:service>
         <sb:timestamp>{{ event.start|date:"Y-m-d\TH:i:s\Z" }}</sb:timestamp>
         <sb:message>{{ event.message }}</sb:message>
-        <sb:url>{{ config.SITE.root_url }}/services/{{ event.service.slug }}</sb:url>
+        <sb:url>{{ config.SITE.root_url }}/services/{{ event.service.slug }}/{{ event.start|date:"Y/m/d" }}</sb:url>
         <sb:status>
             <sb:id>{{ event.status.key }}</sb:id>
             <title>{{ event.status.name }}</title>
