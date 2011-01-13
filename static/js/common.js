@@ -667,7 +667,10 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         dataType: "json",
         success: function(service){
 
-            $("h2 span").text(service.name);
+            $("h2 span").html($("<a />", {
+                text: service.name,
+                href: '/services/' + serviceName
+            }));
             $("#serviceDescription").text(service.description);
             $("#serviceRegion").text(service.region);
 
