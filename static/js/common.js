@@ -363,7 +363,7 @@ stashboard.fillIndex = function() {
                 success: function(evt){ 
                     $("#" + data.id + " td.highlight img")
                         .attr("src", evt.status.image)
-                        .attr("alt", evt.message);
+                    .parent().attr("title", evt.message);
 
                     if (evt.informational) {
                         $("#" + data.id + " td.highlight a").append(
