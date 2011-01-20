@@ -263,14 +263,14 @@ stashboard.fillIndex = function() {
 
     var updateTable = function() {
         var tbody = renderServices(stashboard.services);
-        $(".services-body").html(tbody.html());
+        $("tbody.services-body").html(tbody.html());
         $('.date').remove();
         createDates(numDays);
     };
 
     $('#tabs').tabs({
         select: function(event, ui) {
-            $('.services-body').html("<p>Loading...</p>");
+            $('tbody.services-body').html("<p>Loading...</p>");
             $.ajax({
                 url: '/api/v1/services?region='+$(ui.tab).html(),
                 dataType: 'json',
