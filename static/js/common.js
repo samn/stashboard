@@ -523,7 +523,10 @@ stashboard.fillIndex = function() {
                     context: $("#service-list"), 
                     success: function(data){ 
                         $("#add-service-modal").dialog('close');
-                        createServiceRow(data, false);
+                        if (data.region == $("#tabs li.ui-tabs-selected a").html()) {
+                            stashboard.services.push(data);
+                            updateTable();
+                        }
                     },
                     error: function(evt){ 
                         $("#add-service-modal").dialog('close');
