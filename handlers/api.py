@@ -563,11 +563,11 @@ class AnnouncementsListHandler(restful.Controller):
     def get(self, version):
         logging.debug("AnnouncementsListHandler#get")
 
-        region = self.request.get('region', default_value=None)
-        if region:
-            region = Region.get_by_name(region)
-
         if (self.valid_version(version)):
+            region = self.request.get('region', default_value=None)
+            if region:
+                region = Region.get_by_name(region)
+
             self.json({"announcements": Announcement.get_active(region)})
         else:
             self.error(404, "API Version %s not supported" % version)
@@ -594,6 +594,7 @@ class AnnouncementsListHandler(restful.Controller):
                 else:
                     a.region = None
                 a.put()
+                self.json(a.to_json())
 
             else:
                 self.error(400, "Bad Data: Missing Message")
