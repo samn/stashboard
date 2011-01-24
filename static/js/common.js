@@ -269,6 +269,7 @@ stashboard.fillIndex = function() {
     };
 
     $('#tabs').tabs({
+        tabTemplate: '<li><a href="#{href}">#{label}</a></li>',
         select: function(event, ui) {
             $('tbody.services-body').html("<p>Loading...</p>");
             $.ajax({
@@ -559,8 +560,8 @@ stashboard.fillIndex = function() {
                         name: $("#region-name").val()
                     },
                     dataType: 'json', 
-                    context: $("#service-list"), 
                     success: function(data){ 
+                        $("#tabs").tabs("add", "#region", $("#region-name").val());
                         $("#add-region-modal").dialog('close');
                     },
                     error: function(evt){ 
