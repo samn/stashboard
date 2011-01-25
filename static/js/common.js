@@ -269,6 +269,7 @@ stashboard.fillIndex = function() {
     };
 
     $('#tabs').tabs({
+        tabTemplate: '<li><a href="#{href}">#{label}</a></li>',
         select: function(event, ui) {
             $('tbody.services-body').html("<p>Loading...</p>");
             $.ajax({
@@ -284,9 +285,12 @@ stashboard.fillIndex = function() {
 
     $('th.today').prev().append(
         $('<a />', {
+            'id': 'left-button',
             'class': 'arrow',
             'text': '<<'
-        }).button().click(function() {
+        }).button({disabled: true}).click(function() {
+            if ($(this).button('option', 'disabled')) { return; }
+            $('#right-button').button("enable");
             stashboard.startDate = stashboard.endDate;
             stashboard.endDate = new Date(stashboard.startDate.getTime() + 86400000*numDays);
             
@@ -295,6 +299,12 @@ stashboard.fillIndex = function() {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
+
+            // disable left pagination if the next date is out of range
+            if (stashboard.endDate.getTime() + 86400000*numDays > new Date().getTime()) {
+                $('#left-button').button("disable");
+            }
+
             updateTable();
         })
     );
@@ -303,9 +313,12 @@ stashboard.fillIndex = function() {
 
     $('<th />').append(
         $('<a />', {
+            'id': 'right-button',
             'class': 'arrow',
             'text': '>>'
         }).button().click(function() {
+            if ($(this).button('option', 'disabled')) { return; }
+            $('#left-button').button("enable");
             stashboard.endDate = stashboard.startDate;
             stashboard.startDate = new Date(stashboard.endDate.getTime() - 86400000*numDays);
 
@@ -313,6 +326,12 @@ stashboard.fillIndex = function() {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
+
+            // disable right pagination if the next date is out of range
+            if (stashboard.startDate.getTime() - 86400000*(numDays-1) < new Date().getTime() - 86400000*(stashboard.historySize+1)) {
+                $('#right-button').button("disable");
+            }
+
             updateTable();
         })
     ).appendTo(thead);
@@ -531,7 +550,10 @@ stashboard.fillIndex = function() {
                     context: $("#service-list"), 
                     success: function(data){ 
                         $("#add-service-modal").dialog('close');
-                        createServiceRow(data, false);
+                        if (data.region == $("#tabs li.ui-tabs-selected a").html()) {
+                            stashboard.services.push(data);
+                            updateTable();
+                        }
                     },
                     error: function(evt){ 
                         $("#add-service-modal").dialog('close');
@@ -568,8 +590,8 @@ stashboard.fillIndex = function() {
                         name: $("#region-name").val()
                     },
                     dataType: 'json', 
-                    context: $("#service-list"), 
                     success: function(data){ 
+                        $("#tabs").tabs("add", "#region", $("#region-name").val());
                         $("#add-region-modal").dialog('close');
                     },
                     error: function(evt){ 
@@ -964,7 +986,10 @@ stashboard.fillAnnouncements = function(isAdmin) {
 
     var renderAnnouncement = function(announcement) {
         var d = new Date(announcement.last_updated);
-        var el = $("<div />", {"class": "announcement"});
+        var el = $("<div />", {
+            "class": "announcement",
+            "id": announcement.key
+        });
         if (announcement.region) {
             el.attr('title', announcement.region);
         }
@@ -1030,8 +1055,28 @@ stashboard.fillAnnouncements = function(isAdmin) {
                             region: region
                         },
                         dataType: 'json', 
-                        success: function(data){ 
+                        success: function(announcement){ 
                             $("#add-announcement-modal").dialog('close');
+                            var region = $("#tabs li.ui-tabs-selected a").html();
+                            $announcement = $("#"+announcement.key);
+                            if ($announcement.length > 0) {
+                                if (announcement.region) { 
+                                    if (announcement.region != region) {
+                                        $announcement.remove();
+                                        if ($("#announcements").children().length < 1) {
+                                            $('#announcements-title').hide();
+                                        }
+                                        return;
+                                    }
+                                } else { announcement.region = "" } 
+                                $announcement.attr('title', announcement.region);
+                                $announcement.find('.announcement-message').html(announcement.message);
+                            } else {
+                                if (!announcement.region || announcement.region == region) {
+                                    $("#announcements").prepend(renderAnnouncement(announcement));
+                                }
+                            }
+                            $('#announcements-title').show();
                         },
                         error: function(){ 
                             $("#add-announcement-modal").dialog('close');
@@ -1057,6 +1102,7 @@ stashboard.fillAnnouncements = function(isAdmin) {
         $('.delete-announcement').live('click', function(evt) {
             evt.preventDefault();
             var a = $(evt.target);
+            var id = a.parent().parent().attr('id');
             $('#delete-announcement-modal').dialog({
                 resizable: false,
                 height: 120,
@@ -1067,9 +1113,12 @@ stashboard.fillAnnouncements = function(isAdmin) {
                         $.ajax({
                             type: 'DELETE',
                             url: a.attr('href'),
-                            success: function() {
-                                a.parentsUntil('.announcement').parent().remove();
+                            success: function(data) {
                                 $("#delete-announcement-modal").dialog('close');
+                                $("#"+id).remove(); 
+                                if ($("#announcements").children().length < 1) {
+                                    $('#announcements-title').hide();
+                                }
                             }
                         });
                     },

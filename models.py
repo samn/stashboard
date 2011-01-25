@@ -351,19 +351,27 @@ class Announcement(db.Model):
 
     @staticmethod
     def get_active(region=None):
+        """ Return all announcements that should be displayed, with the most
+            recent first.  Filters by region is specified (but still includes
+            global announcements), if not retrieves only global announcements.
+            Returns a list of dictionary repersentations of announcements.
+        """
         q = Announcement.all()
         q.order("-last_updated")
         q.filter('active = ', True)
         q.filter('region IN ', (None, region))
         
-        announcements = []
-        for announcement in q.fetch(100):
-            d = {}
-            d['message'] = str(announcement.message)
-            d['key'] = str(announcement.key())
-            d['last_updated'] = announcement.last_updated.strftime('%m/%d/%Y')
-            if announcement.region:
-                d['region'] = str(announcement.region.name)
-            announcements.append(d)
+        return [announcement.to_json() for announcement in q.fetch(100)]
 
-        return announcements
+    def to_json(self):
+        """ Return a dictionary representation of this object
+                (that can be serialized in json). 
+        """
+        d = {}
+        d['message'] = str(self.message)
+        d['key'] = str(self.key())
+        d['last_updated'] = self.last_updated.strftime('%m/%d/%Y')
+        if self.region:
+            d['region'] = str(self.region.name)
+
+        return d
