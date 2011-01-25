@@ -285,9 +285,12 @@ stashboard.fillIndex = function() {
 
     $('th.today').prev().append(
         $('<a />', {
+            'id': 'left-button',
             'class': 'arrow',
             'text': '<<'
-        }).button().click(function() {
+        }).button({disabled: true}).click(function() {
+            if ($(this).button('option', 'disabled')) { return; }
+            $('#right-button').button("enable");
             stashboard.startDate = stashboard.endDate;
             stashboard.endDate = new Date(stashboard.startDate.getTime() + 86400000*numDays);
             
@@ -296,6 +299,12 @@ stashboard.fillIndex = function() {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
+
+            // disable left pagination if the next date is out of range
+            if (stashboard.endDate.getTime() + 86400000*numDays > new Date().getTime()) {
+                $('#left-button').button("disable");
+            }
+
             updateTable();
         })
     );
@@ -304,9 +313,12 @@ stashboard.fillIndex = function() {
 
     $('<th />').append(
         $('<a />', {
+            'id': 'right-button',
             'class': 'arrow',
             'text': '>>'
         }).button().click(function() {
+            if ($(this).button('option', 'disabled')) { return; }
+            $('#left-button').button("enable");
             stashboard.endDate = stashboard.startDate;
             stashboard.startDate = new Date(stashboard.endDate.getTime() - 86400000*numDays);
 
@@ -314,6 +326,12 @@ stashboard.fillIndex = function() {
                 stashboard.endDate = new Date(new Date().getTime() - 86400000);
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
+
+            // disable right pagination if the next date is out of range
+            if (stashboard.startDate.getTime() - 86400000*(numDays-1) < new Date().getTime() - 86400000*(stashboard.historySize+1)) {
+                $('#right-button').button("disable");
+            }
+
             updateTable();
         })
     ).appendTo(thead);
