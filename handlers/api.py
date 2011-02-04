@@ -100,7 +100,7 @@ class ServicesListHandler(restful.Controller):
             name = self.request.get('name', default_value=None)
             description = self.request.get('description', default_value=None)
             region = self.request.get('region', default_value=None)
-            if name and description:
+            if name and description and region:
                 slug = Service.slugify(name, region)
                 existing_s = Service.get_by_slug(slug)
 

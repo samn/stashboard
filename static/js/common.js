@@ -340,6 +340,7 @@ stashboard.fillIndex = function() {
     var createServiceRow = function(data, fetchStatuses){
         var informationImage = "/images/status/question-white.png";
         var defaultImage = "/images/status/tick-circle.png";
+        var defaultHover = "The Service Is Up";
         var imageRow = defaultImage;
         var tr = $('<tr />', {id: data.id});
 
@@ -391,7 +392,7 @@ stashboard.fillIndex = function() {
                 success: function(evt){ 
                     $("#" + data.id + " td.highlight img")
                         .attr("src", evt.status.image)
-                    .parent().attr("title", evt.message);
+                    .parent().parent().attr("title", evt.message);
 
                     if (evt.informational) {
                         $("#" + data.id + " td.highlight a").append(
@@ -404,7 +405,9 @@ stashboard.fillIndex = function() {
                 },
                 error: function(evt){ 
                     $("#" + data.id + " td.highlight img")
-                        .attr("src", defaultImage);
+                        .attr("src", defaultImage)
+                        .parent().parent()
+                        .attr("title", defaultHover);
                 }
             });
 
@@ -432,7 +435,10 @@ stashboard.fillIndex = function() {
                     for (i=0; i < events.length; i++) {
                         var e = events[i];
                         var evtDate = new Date(e.timestamp);
-                        calendar[evtDate.getDate()] = e.informational || e.status.level !== "NORMAL";
+                        calendar[evtDate.getDate()] = false;
+                        if (e.informational || e.status.level !== "NORMAL") {
+                            calendar[evtDate.getDate()] = e.message;
+                        }
                     }
 
                     for (i= days.length-1; i >= 0; i--) {
@@ -445,11 +451,11 @@ stashboard.fillIndex = function() {
                         if (calendar[d.getDate()]) {
                             td.html($("<a />", {href: url}).append(
                                 $("<img />",{src: "/images/status/information.png"}))
-                            );
+                            ).attr("title", calendar[d.getDate()]);
                         } else {
                             td.html($("<a />", {href: url}).append(
                                 $("<img />",{src: defaultImage}))
-                            );
+                            ).attr("title", defaultHover);
                         }
                     }
 
@@ -503,32 +509,9 @@ stashboard.fillIndex = function() {
     });
 
     $("#add-service").click(function(){
+        stashboard.populateRegions($('#service-region'));
         $("#add-service-modal").dialog('open');
     });
-
-    $("#add-service-region").button().click(function() {
-        $.ajax({
-            type: 'GET',
-            url: '/api/v1/regions',
-            dataType: 'json',
-            success: function(data) {
-                var regions = data.regions;
-                var select = $('<select>', {'name': 'service-region', 'id': 'service-region'});
-                for (var i=0, l=regions.length; i < l; i++) {
-                    $('<option />', {
-                      'value': data.regions[i].name,
-                      'text': data.regions[i].name
-                    }).appendTo(select);
-                }
-                $('#add-service-region').replaceWith($('<div>') 
-                    .append($('<label>', {
-                      'for': 'service-region',
-                      'text': 'Region (optional)'
-                    })).append(select));
-            }
-        });
-    });
-
 
     $("#add-service-modal").dialog({
         height: 360,
@@ -568,6 +551,7 @@ stashboard.fillIndex = function() {
         },
         close: function() {
             $(this).children().val("");
+            $(this).children('#service-region').children().remove();
         }
     });
 
