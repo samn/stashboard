@@ -340,6 +340,7 @@ stashboard.fillIndex = function() {
     var createServiceRow = function(data, fetchStatuses){
         var informationImage = "/images/status/question-white.png";
         var defaultImage = "/images/status/tick-circle.png";
+        var defaultHover = "The Service Was Up";
         var imageRow = defaultImage;
         var tr = $('<tr />', {id: data.id});
 
@@ -382,7 +383,7 @@ stashboard.fillIndex = function() {
                 success: function(evt){ 
                     $("#" + data.id + " td.highlight img")
                         .attr("src", evt.status.image)
-                    .parent().attr("title", evt.message);
+                    .parent().parent().attr("title", evt.message);
 
                     if (evt.informational) {
                         $("#" + data.id + " td.highlight a").append(
@@ -423,7 +424,10 @@ stashboard.fillIndex = function() {
                     for (i=0; i < events.length; i++) {
                         var e = events[i];
                         var evtDate = new Date(e.timestamp);
-                        calendar[evtDate.getDate()] = e.informational || e.status.level !== "NORMAL";
+                        calendar[evtDate.getDate()] = false;
+                        if (e.informational || e.status.level !== "NORMAL") {
+                            calendar[evtDate.getDate()] = e.message;
+                        }
                     }
 
                     for (i= days.length-1; i >= 0; i--) {
@@ -436,11 +440,11 @@ stashboard.fillIndex = function() {
                         if (calendar[d.getDate()]) {
                             td.html($("<a />", {href: url}).append(
                                 $("<img />",{src: "/images/status/information.png"}))
-                            );
+                            ).attr("title", calendar[d.getDate()]);
                         } else {
                             td.html($("<a />", {href: url}).append(
                                 $("<img />",{src: defaultImage}))
-                            );
+                            ).attr("title", defaultHover);
                         }
                     }
 
