@@ -340,7 +340,7 @@ stashboard.fillIndex = function() {
     var createServiceRow = function(data, fetchStatuses){
         var informationImage = "/images/status/question-white.png";
         var defaultImage = "/images/status/tick-circle.png";
-        var defaultHover = "The Service Was Up";
+        var defaultHover = "The Service Is Up";
         var imageRow = defaultImage;
         var tr = $('<tr />', {id: data.id});
 
@@ -396,7 +396,9 @@ stashboard.fillIndex = function() {
                 },
                 error: function(evt){ 
                     $("#" + data.id + " td.highlight img")
-                        .attr("src", defaultImage);
+                        .attr("src", defaultImage)
+                        .parent().parent()
+                        .attr("title", defaultHover);
                 }
             });
 
