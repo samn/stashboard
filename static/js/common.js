@@ -498,32 +498,9 @@ stashboard.fillIndex = function() {
     });
 
     $("#add-service").click(function(){
+        stashboard.populateRegions($('#service-region'));
         $("#add-service-modal").dialog('open');
     });
-
-    $("#add-service-region").button().click(function() {
-        $.ajax({
-            type: 'GET',
-            url: '/api/v1/regions',
-            dataType: 'json',
-            success: function(data) {
-                var regions = data.regions;
-                var select = $('<select>', {'name': 'service-region', 'id': 'service-region'});
-                for (var i=0, l=regions.length; i < l; i++) {
-                    $('<option />', {
-                      'value': data.regions[i].name,
-                      'text': data.regions[i].name
-                    }).appendTo(select);
-                }
-                $('#add-service-region').replaceWith($('<div>') 
-                    .append($('<label>', {
-                      'for': 'service-region',
-                      'text': 'Region (optional)'
-                    })).append(select));
-            }
-        });
-    });
-
 
     $("#add-service-modal").dialog({
         height: 360,
@@ -563,6 +540,7 @@ stashboard.fillIndex = function() {
         },
         close: function() {
             $(this).children().val("");
+            $(this).children('#service-region').children().remove();
         }
     });
 
