@@ -47,7 +47,7 @@ SITE = {
     "author": "Brightcove Inc.",
     # This must be the email address of a registered administrator for the
     # application due to mail api restrictions.
-    "email": "samneubardt@brightcove.com",
+    "email": "sneubardt@brightcove.com",
     "description": "Information About the Status of the Brightcove Service",
     "root_url": "http://bcovestatus.appspot.com",
     "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
