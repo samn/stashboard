@@ -56,6 +56,7 @@ else:
 
 ROUTES = [
     ('/*$', rootHandler),
+    ('/auth', site.AuthHandler),
     ('/debug', site.DebugHandler),
     #('/*[^/]', site.) redirect pages without slashed to pages with slashes
 

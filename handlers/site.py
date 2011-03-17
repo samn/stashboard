@@ -435,3 +435,9 @@ class ProfileHandler(restful.Controller):
         self.render(td, 'credentials.html')
 
         
+class AuthHandler(restful.Controller):
+    
+    @authorized.force_ssl()
+    def get(self):
+        td = default_template_data()
+        self.redirect(td['login_link'])
