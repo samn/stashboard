@@ -254,3 +254,7 @@ div.announcement-message {
 #region { display:none }
 #tabs {padding-left:0px; padding-bottom:0px;}
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {border-color:#e5e5e5;}
+
+#serviceDescription, #serviceRegion {font-style:italic;display:inline;}
+#serviceDescription {padding-right:5px;}
+#serviceRegion {padding-left:5px;}
