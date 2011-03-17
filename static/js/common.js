@@ -247,17 +247,25 @@ stashboard.fillLegend = function(isAdmin) {
 
 stashboard.fillIndex = function() {
     var thead = $("#service-list thead tr");
-    var numDays = (stashboard.endDate.getTime() - stashboard.startDate.getTime()) / 86400000;
+    var numDays = Math.round((stashboard.endDate.getTime() - stashboard.startDate.getTime()) / 86400000);
 
     var createDates = function(numDays) {
-        var today = $('th.today');
-        var d = new Date(stashboard.startDate.getTime() + 86400000);
-        for (var i=0; i < numDays; i++) {
-            $("<th />", {
+        function makeDateCell() {
+            return $("<th />", {
                 "class": "date",
                 text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
-            }).insertAfter(today);
-            d = new Date(d.getTime() + 86400000);
+            });
+        }
+        var today = $('th.today');
+        var d = new Date(stashboard.startDate.getTime() + 86400000);
+        for (var i=0; i < numDays; i++, d = new Date(d.getTime() + 86400000)) {
+            var th = makeDateCell();
+            if (i == 0) {
+                th.append('<a class="arrow arrow-right">&gt;<a>');
+            } else if (i == numDays-1) {
+                th.prepend('<a class="arrow arrow-left">&lt;<a>');
+            }
+            th.insertAfter(today);
         }
     };
 
@@ -283,14 +291,11 @@ stashboard.fillIndex = function() {
         }
     });
 
-    $('th.today').prev().append(
-        $('<a />', {
-            'id': 'left-button',
-            'class': 'arrow',
-            'text': '<<'
-        }).button({disabled: true}).click(function() {
-            if ($(this).button('option', 'disabled')) { return; }
-            $('#right-button').button("enable");
+    thead.delegate('a.arrow', 'click', function(evt) {
+        evt.preventDefault();
+        if ($(this).hasClass('disabled')) { return false; }
+        if ($(this).hasClass('arrow-left')) {
+            thead.children('a.arrow-right').removeClass('disabled');
             stashboard.startDate = stashboard.endDate;
             stashboard.endDate = new Date(stashboard.startDate.getTime() + 86400000*numDays);
             
@@ -302,23 +307,10 @@ stashboard.fillIndex = function() {
 
             // disable left pagination if the next date is out of range
             if (stashboard.endDate.getTime() + 86400000*numDays > new Date().getTime()) {
-                $('#left-button').button("disable");
+                $(this).addClass('disabled');
             }
-
-            updateTable();
-        })
-    );
-        
-    createDates(numDays);
-
-    $('<th />').append(
-        $('<a />', {
-            'id': 'right-button',
-            'class': 'arrow',
-            'text': '>>'
-        }).button().click(function() {
-            if ($(this).button('option', 'disabled')) { return; }
-            $('#left-button').button("enable");
+        } else if ($(this).hasClass('arrow-right')) {
+            thead.children('a.arrow-left').removeClass('disabled');
             stashboard.endDate = stashboard.startDate;
             stashboard.startDate = new Date(stashboard.endDate.getTime() - 86400000*numDays);
 
@@ -328,14 +320,15 @@ stashboard.fillIndex = function() {
             }
 
             // disable right pagination if the next date is out of range
-            if (stashboard.startDate.getTime() - 86400000*(numDays-1) < new Date().getTime() - 86400000*(stashboard.historySize+1)) {
-                $('#right-button').button("disable");
+            if (stashboard.endDate.getTime() + 86400000*numDays > new Date().getTime()) {
+                $(this).addClass('disabled');
             }
+        }
+        updateTable();
+    });
 
-            updateTable();
-        })
-    ).appendTo(thead);
-
+    // the left arrow should be disabled initially since dates in the future are invalid
+    thead.children('a.arrow-left').addClass('disabled');
 
     var createServiceRow = function(data, fetchStatuses){
         var informationImage = "/images/status/question-white.png";
@@ -475,10 +468,7 @@ stashboard.fillIndex = function() {
         dataType: 'json', 
         success: function(data){ 
             stashboard.services = data.services
-            var tbody = renderServices(stashboard.services);
-            $("#service-list").fadeIn('fast', function(){    
-                $(tbody).replaceAll(".services-body")
-            });
+            updateTable();
         },
         error: function(){ }
     });

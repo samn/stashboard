@@ -72,6 +72,10 @@ h3.date-range {color: #999; margin-top: 20px}
 
 /* wordpress entries styling - main content column */
 #webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
+#webservices table a.arrow {text-decoration:none;cursor:pointer;color:#3b3b3b;}
+#webservices table a.arrow .disabled {cursor:default;}
+#webservices table a.arrow-left {float:left;}
+#webservices table a.arrow-right {float:right;}
 #webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid #e5e5e5;border-right: 1px solid #e5e5e5;}
 #webservices tr {font-size: 16px;}
 #webservices td {padding: 10px;border-bottom: 1px solid #e5e5e5;border-right: 1px solid #e5e5e5; vertical-align: middle;}
@@ -219,10 +223,6 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
 #powered {
     font-family: courier, monospace;
     font-size: 10px;
-}
-
-a.arrow {
-    float:right;
 }
 
 #announcements-title {
