@@ -35,11 +35,16 @@ h3.date-range {color: #999; margin-top: 20px}
 #status h2 { font-size: 60px; color: #FFF; text-align: center; padding-top: 65px;text-shadow: 2px 2px 0px #000;}
 
 #content {
-  border: 1px solid rgb(228, 228, 228); 
   background: white;
 }
 
-.frame { padding: 20px;}
+.frame { 
+  padding: 0px 20px 0px 20px;
+  margin-bottom: 20px;
+}
+
+.service-detail {border: 1px solid rgb(228, 228, 228);padding-bottom:20px;}
+
 .dialog { display: none; }
 
 #sidebar { float: right; margin: 20px; width: 250px; }
