@@ -135,10 +135,11 @@ class RootHandler(restful.Controller):
     @authorized.force_ssl(only_admin=True)
     def get(self):
         logging.debug("RootHandler#get")
+        numdays = config.SITE['num_days']
         
         today = datetime.datetime.today()
         end = today
-        start = end - timedelta(days=5)
+        start = end - timedelta(days=numdays)
 
         start_date = dateparser.parse(self.request.get('start', default_value=str(start)))
         end_date = dateparser.parse(self.request.get('end', default_value=str(end)))
@@ -147,7 +148,7 @@ class RootHandler(restful.Controller):
         if end_date > today or start_date > end_date or \
         today.toordinal() - history_size > start_date.toordinal():
             end_date = today
-            start_date = end_date - timedelta(days=5)
+            start_date = end_date - timedelta(days=numdays)
 
         regions = Region.all_regions()
 
