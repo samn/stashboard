@@ -45,6 +45,14 @@ h3.date-range {color: #999; margin-top: 20px}
 
 .service-detail {border: 1px solid #e5e5e5;padding-bottom:20px;}
 
+#service-list {
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  border-top-size: 0px;
+  padding-bottom:20px;
+}
+
 .dialog { display: none; }
 
 #sidebar { float: right; margin: 20px; width: 250px; }
