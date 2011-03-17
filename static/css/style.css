@@ -252,3 +252,5 @@ div.announcement-message {
 .feed-icon { float:right; }
 
 #region { display:none }
+#tabs {padding-left:0px; padding-bottom:0px;}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {border-color:#e5e5e5;}
