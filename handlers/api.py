@@ -201,6 +201,7 @@ class EventsListHandler(restful.Controller):
             service = Service.get_by_slug(service_slug)
 
             if service:
+                history_size = config.SITE['history_size']
                 start = self.request.get('start', default_value=None)
                 end = self.request.get('end', default_value=None)
 
@@ -210,10 +211,17 @@ class EventsListHandler(restful.Controller):
                 if start:
                     try:
                         _start = aware_to_naive(parse(start))
-                        query.filter("start >= ", _start)
+                        # clip the start date to now - history_size
+                        if datetime.now() - _start > timedelta(days=history_size):
+                            _start = _start - timedelta(days=history_size)
+
                     except:
                         self.error(400, "Invalid Date: %s" % start)
                         return
+                else:
+                    _start = datetime.now() - timedelta(days=history_size)
+
+                query.filter("start >= ", _start)
 
                 if end:
                     try:
