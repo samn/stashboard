@@ -1,5 +1,5 @@
 html, body{height: 100%;}
-body{font:12px arial,helvetica,verdana,sans-serif;color:#3b3b3b;}
+body{font:12px arial,helvetica,verdana,sans-serif;color:#3b3b3b;border-color:#e5e5e5;}
 
 a{color:#333;text-decoration:none;}
 a:hover{color:#666;}
