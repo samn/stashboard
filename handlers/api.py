@@ -41,7 +41,7 @@ import cgi
 import urllib
 import logging
 import jsonpickle
-import status_images
+import sprites
 
 from wsgiref.handlers import format_date_time
 from time import mktime
@@ -195,7 +195,7 @@ class ServiceInstanceHandler(restful.Controller):
 
 class EventsListHandler(restful.Controller):
     def get(self, version, service_slug):
-        logging.debug("StatusesListHandler#get")
+        logging.debug("EventsListHandler#get")
 
         if (self.valid_version(version)):
             service = Service.get_by_slug(service_slug)
@@ -487,12 +487,10 @@ class ImagesListHandler(restful.Controller):
 
         if (self.valid_version(version)):
 
-            query = status_images.images
+            for sprite in sprites.sprites.values():
+                sprite["url"] = "http://" + host + sprite["url"]
 
-            for img in query:
-                img["url"] = "http://" + host + img["url"]
-
-            if (query):
+            if (sprites.sprites):
                 self.json({"images": query})
             else:
                 self.error(404, "No images")

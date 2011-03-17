@@ -114,13 +114,6 @@ h3.date-range {color: #999; margin-top: 20px}
 #submit .update-status { float: left; margin: 10px 0px;}
 #submit .update-submit { clear: left; display: block; margin-left: auto; width: 150px;}
 
-#legend table tr, #legend table th {font-size: 12px}
-#legend h4 { color: #999; font-size: 18px; margin: 20px 0 5px 0;}
-#legend table {border: solid 2px rgb(228, 228, 228);width: auto}
-#legend table tr td:first-child {width: 16px;}
-#legend td {padding: 5px}
-
-
 #footer, #push {height: 3em;}
 #footer {padding: 0 30px; width: 900px; margin: auto;}
 #footer ul {padding: 10px 0px;}
@@ -258,3 +251,10 @@ div.announcement-message {
 #serviceDescription, #serviceRegion {font-style:italic;display:inline;}
 #serviceDescription {padding-right:5px;}
 #serviceRegion {padding-left:5px;}
+#legend-bar {padding-left:30px;}
+#legend-bar li {
+    background-image:url('/images/icons-sprite.gif');
+    background-repeat:no-repeat;
+    padding: 5px 30px 0 25px;
+    display: inline;
+}

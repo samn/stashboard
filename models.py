@@ -26,6 +26,7 @@ from datetime import timedelta
 from datetime import date
 from utils import slugify
 import config
+import sprites
 import urlparse
 
 class Level(object):
@@ -201,7 +202,7 @@ class Status(db.Model):
         name        -- string: The friendly name of this status
         slug        -- stirng: The identifier for the status
         description -- string: The state this status represents
-        image       -- string: Image in /images/status
+        image      -- string: The image in sprites
         severity    -- int: The serverity of this status
 
     """
@@ -227,16 +228,19 @@ class Status(db.Model):
         warning = Level.get_severity(Level.warning)
         error = Level.get_severity(Level.error)
 
-        d = Status(name="Down", slug="down", image="cross-circle", severity=error, \
+        d = Status(name="Down", slug="down", image="error", severity=error, \
                        description="The service is currently down")
-        u = Status(name="Up", slug="up", image="tick-circle", severity=normal, \
+        u = Status(name="Up", slug="up", image="check", severity=normal, \
                        description="The service is up")
-        w = Status(name="Warning", slug="warning", image="exclamation", severity=warning, \
-                       description="The service is experiencing intermittent problems")
+        w = Status(name="Warning", slug="warning", image="warning", severity=warning, \
+                       description="An informational note")
+        z = Status(name="Information", slug="information", image="information", severity=normal, \
+                       description="An informational note")
 
         d.put()
         u.put()
         w.put()
+        z.put()
 
         s = Setting(name="installed_defaults")
         s.put()
@@ -249,7 +253,7 @@ class Status(db.Model):
     severity = db.IntegerProperty(required=True)
 
     def image_url(self):
-        return "/images/status/" + unicode(self.image) + ".png"
+        return sprites.sprites["statuses"]["url"]
 
     def resource_url(self):
         return "/statuses/" + str(self.slug)
@@ -270,6 +274,7 @@ class Status(db.Model):
 
         o = urlparse.urlparse(base_url)
         m["image"] = o.scheme + "://" +  o.netloc + self.image_url()
+        m["pos"] = sprites.sprites["statuses"]["sections"][str(self.image)]["pos"]
 
         return m
 

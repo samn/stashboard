@@ -53,16 +53,11 @@ stashboard.rfc1123 = function(date){
 
 stashboard.fillLegend = function(isAdmin) {
     var createStatusRow = function(data){
-        var tr = $("<tr />");
+        var leg = $("#legend-bar");
 
-        $("<td />", {"class": "icon"}).append(
-            $("<img />", {
-                src: data.image,
-                alt: data.name
-            })
-        ).appendTo(tr);
-
-        $("<td />", {"class": "description", text: data.description}).appendTo(tr);
+        $("<li />", {text:data.description})
+        .css('background-position', data.pos)
+        .appendTo(leg);
 
         if (isAdmin) {
 
@@ -127,7 +122,6 @@ stashboard.fillLegend = function(isAdmin) {
                 });
           });
       }
-      $("#legend-body").append(tr);
     };
 
     $("#add-status").click(function(){

@@ -74,35 +74,19 @@ def default_template_data():
     
         
     status_images = [
-        [
-            "tick-circle",
-            "cross-circle",
-            "exclamation",
-            "wrench",
-            "flag",
-        ],
-        [
-            "clock",
-            "heart",
-            "hard-hat",
+            "check",
             "information",
-            "lock",
-        ],
-        [
-            "plug",
-            "question",
-            "traffic-cone",
-            "bug",
-            "broom",
-        ],
-    ]
+            "warning",
+            "error"
+            "feed",
+        ]
     
     data = {
         "title": config.SITE["title"],
         "user": user,
         "user_is_admin": users.is_current_user_admin(),
         "login_link": greeting, 
-        'common_statuses': status_images,
+        'status_images': status_images,
     }
     
     return data

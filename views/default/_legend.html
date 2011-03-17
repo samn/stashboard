@@ -1,21 +1,5 @@
 <div class="legend" id="legend">
-  <h4> Legend </h4>
-  <table>
-    {% if user_is_admin %}
-    <thead>
-      <tr>
-        <th></th>
-        <th>Description</th>
-        <th>Level</th>
-        <th>Edit</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    {% endif %}
-    
-    <tbody id="legend-body">
-    </tbody>
-  </table>
+  <ul id="legend-bar"></ul>
   
   {% if user_is_admin %}
     <a id="add-status" class="button" href="#">Add New Status</a>
@@ -29,15 +13,9 @@
       </select>
       
       <label for="status-image">Image</label>
-      {% for image_row in common_statuses %}
-        <div>
-        {% for image in image_row %}
-        
+      {% for image in status_images %}
         <input type="radio" name="status-image" value="{{ image }}">
         <img src="/images/status/{{ image }}.png" />
-        {% endfor %}
-        </div>
-        
       {% endfor %}
 
       <label for="status-description">Description</label>
