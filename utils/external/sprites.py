@@ -40,3 +40,5 @@ sprites = {
         }
     }
 }
+
+default_status_pos = "0px 0px"

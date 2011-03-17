@@ -340,11 +340,8 @@ stashboard.fillIndex = function() {
         ).append(
             $('<a />', { 
                 'class': 'feed-icon',
-                href: "/feed/services/" + slug + "/events",
-                html: $("<img />", {
-                    src: '/images/feed-icon.png'
-                })
-            })
+                href: "/feed/services/" + slug + "/events"})
+            .css('background-position',stashboard.feedIconPos)
         ).appendTo(tr);
 
         if (fetchStatuses) {
@@ -377,8 +374,9 @@ stashboard.fillIndex = function() {
                 url: "/api/v1/services/" + data.id + "/events/current",
                 dataType: 'json', 
                 success: function(evt){ 
-                    $("#" + data.id + " td.highlight img")
-                        .attr("src", evt.status.image)
+                    $("#" + data.id + " td.highlight a")
+                    .empty()
+                    .css('background-position',evt.status.pos)
                     .parent().parent().attr("title", evt.message);
 
                     if (evt.informational) {
@@ -391,8 +389,9 @@ stashboard.fillIndex = function() {
                     }
                 },
                 error: function(evt){ 
-                    $("#" + data.id + " td.highlight img")
-                        .attr("src", defaultImage)
+                    $("#" + data.id + " td.highlight a")
+                        .empty()
+                        .css('background-position',stashboard.defaultStatusPos)
                         .parent().parent()
                         .attr("title", defaultHover);
                 }
@@ -424,7 +423,7 @@ stashboard.fillIndex = function() {
                         var evtDate = new Date(e.timestamp);
                         calendar[evtDate.getDate()] = false;
                         if (e.informational || e.status.level !== "NORMAL") {
-                            calendar[evtDate.getDate()] = e.message;
+                            calendar[evtDate.getDate()] = i;
                         }
                     }
 
@@ -435,14 +434,14 @@ stashboard.fillIndex = function() {
                         url = "/services/" + data.id + "/" + d.getFullYear() + "/";
                         url += (d.getMonth() + 1) + "/" + d.getDate();
 
-                        if (calendar[d.getDate()]) {
-                            td.html($("<a />", {href: url}).append(
-                                $("<img />",{src: "/images/status/information.png"}))
-                            ).attr("title", calendar[d.getDate()]);
+                        if (calendar[d.getDate()] != false) {
+                            td.html($("<a />", {href: url})
+                            .attr("title", events[calendar[d.getDate()]].message)
+                            .css('background-position',events[calendar[d.getDate()]].status.pos));
                         } else {
-                            td.html($("<a />", {href: url}).append(
-                                $("<img />",{src: defaultImage}))
-                            ).attr("title", defaultHover);
+                            td.html($("<a />", {href: url})
+                            .attr("title", defaultHover)
+                            .css('background-position', stashboard.defaultStatusPos));
                         }
                     }
 

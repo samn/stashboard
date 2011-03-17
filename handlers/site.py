@@ -62,6 +62,7 @@ from utils import authorized
 from models import Status, Service, Event, Profile, AuthRequest, Region
 
 import config
+import sprites
 
 def default_template_data():
     user = users.get_current_user()
@@ -140,6 +141,8 @@ class RootHandler(restful.Controller):
         td["start_date"] = start_date - timedelta(days=1)
         td["end_date"] = end_date - timedelta(days=1)
         td["history_size"] = history_size
+        td["default_status_pos"] = sprites.default_status_pos
+        td["feed_icon_pos"] = sprites.sprites['statuses']['sections']['feed']['pos']
         td["regions"] = regions
 
         self.render(td, 'index.html')

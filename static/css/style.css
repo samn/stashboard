@@ -82,12 +82,13 @@ h3.date-range {color: #999; margin-top: 20px}
 #webservices .today {background: rgb(228, 228, 228);}
 #webservices .highlight {background: rgb(247, 247, 247);}
 #webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
-#webservices table a {text-decoration: underline;}
+#webservices tbody a {text-decoration: underline;}
+#webservices tbody .status a, a.feed-icon {background-image:url('/images/icons-sprite.gif');background-repeat:no-repeat;padding: 1px 30px 0 0;}
 
 #webservices .event-log {margin-top: 20px; border-collapse: separate; border-left:1px solid #E4E4E4;border-top:1px solid #E4E4E4;}
 #webservices .event-log thead {background:none repeat scroll 0 0 #EEEEEE;}
 #webservices .event-log th {font-size: 16px;text-align: center;}
-#webservices .event-log td {fonst-size: 14px;}
+#webservices .event-log td {font-size: 14px;}
 #webservices .event-log td:first-child {text-align: center;}
 .status-header {width: 10%;}
 .time-header {width: 20%;}
@@ -242,7 +243,7 @@ div.announcement-message {
     padding-left: 10px;
 }
 
-.feed-icon { float:right; }
+a.feed-icon { float:right; height:19px;}
 
 #region { display:none }
 #tabs {padding-left:0px; padding-bottom:0px;}
