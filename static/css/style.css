@@ -43,7 +43,7 @@ h3.date-range {color: #999; margin-top: 20px}
   margin-bottom: 20px;
 }
 
-.service-detail {border: 1px solid rgb(228, 228, 228);padding-bottom:20px;}
+.service-detail {border: 1px solid #e5e5e5;padding-bottom:20px;}
 
 .dialog { display: none; }
 
@@ -62,13 +62,11 @@ h3.date-range {color: #999; margin-top: 20px}
 #add-service { margin-top: 20px;}
 #add-status { margin-top: 20px;}
 
-
-
 /* wordpress entries styling - main content column */
 #webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
-#webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228);}
+#webservices th {text-align: left;font-size: 20px;padding: 10px;border-bottom: 1px solid #e5e5e5;border-right: 1px solid #e5e5e5;}
 #webservices tr {font-size: 16px;}
-#webservices td {padding: 10px;border-bottom: 1px solid rgb(228, 228, 228);border-right: 1px solid rgb(228, 228, 228); vertical-align: middle;}
+#webservices td {padding: 10px;border-bottom: 1px solid #e5e5e5;border-right: 1px solid #e5e5e5; vertical-align: middle;}
 #webservices .today {background: rgb(228, 228, 228);}
 #webservices .highlight {background: rgb(247, 247, 247);}
 #webservices .status, #webservices .date, #webservices .today, .delete {text-align: center;}
