@@ -332,6 +332,7 @@ stashboard.fillIndex = function() {
         var imagePos = defaultPos;
         var tr = $('<tr />', {id: data.id});
 
+        // render the service name and feed icon
         var slug = data.url.substr(data.url.lastIndexOf('/')+1);
         $('<td />').append(
             $('<a />', {
@@ -349,6 +350,7 @@ stashboard.fillIndex = function() {
             imagePos = informationPos;
         }
         
+        // render the current status
         $('<td />', {"class": "status highlight"}).append(
             $('<a />', {
                 href: 'services/' + data.id,
@@ -356,6 +358,7 @@ stashboard.fillIndex = function() {
             }).css('background-position', imagePos)
         ).appendTo(tr);
 
+        // render past statuses
         for (var i=0; i < numDays; i++) {
             $("<td />", {"class": "status"}).append(
                 $("<a />", {
@@ -365,7 +368,7 @@ stashboard.fillIndex = function() {
         }
 
         if (fetchStatuses){
-
+            // fetch the current status
             $.ajax({ 
                 type: "GET",
                 url: "/api/v1/services/" + data.id + "/events/current",
@@ -373,7 +376,9 @@ stashboard.fillIndex = function() {
                 success: function(evt){ 
                     $("#" + data.id + " td.highlight a")
                     .empty()
+                    // update the status icon (from the loading icon)
                     .css('background-position',evt.status.pos)
+                    // and the hover text
                     .parent().parent().attr("title", evt.message);
 
                     if (evt.informational) {
@@ -385,6 +390,8 @@ stashboard.fillIndex = function() {
                         );
                     }
                 },
+                // an error indicates that there is no current event,
+                // i.e. that the service is up, so use the defaults
                 error: function(evt){ 
                     $("#" + data.id + " td.highlight a")
                         .empty()
@@ -394,6 +401,8 @@ stashboard.fillIndex = function() {
                 }
             });
 
+
+            // now retrieve the past statuses
             var url = "/api/v1/services/" + data.id + "/events";
             url += "?start=" + stashboard.rfc1123(stashboard.startDate);
             url += "&end=" + stashboard.rfc1123(stashboard.endDate);
