@@ -6,8 +6,7 @@
         stashboard.startDate = new Date("{{start_date|date:"Y/n/j"}}")
         stashboard.endDate = new Date("{{end_date|date:"Y/n/j"}}"); 
         stashboard.historySize = {{history_size}};
-        stashboard.defaultStatusPos = "{{default_status_pos}}";
-        stashboard.feedIconPos = "{{feed_icon_pos}}";
+        stashboard.sprites = {{sprites|safe}};
         stashboard.fillIndex();
         {% if user_is_admin %}
         stashboard.adminRegionTabs();

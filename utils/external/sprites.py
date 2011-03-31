@@ -36,6 +36,9 @@ sprites = {
             },
             "feed" :{
                 "pos": "0px -80px"
+            },
+            "question" :{
+                "pos": "0px -100px"
             }
         }
     }

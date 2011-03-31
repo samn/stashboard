@@ -325,10 +325,11 @@ stashboard.fillIndex = function() {
     thead.children('a.arrow-left').addClass('disabled');
 
     var createServiceRow = function(data, fetchStatuses){
-        var informationImage = "/images/status/question-white.png";
-        var defaultImage = "/images/status/tick-circle.png";
+        var sprites = stashboard.sprites.statuses.sections;
+        var defaultPos = sprites.check.pos;
         var defaultHover = "The Service Is Up";
-        var imageRow = defaultImage;
+        var informationPos = sprites.question.pos;
+        var imagePos = defaultPos;
         var tr = $('<tr />', {id: data.id});
 
         var slug = data.url.substr(data.url.lastIndexOf('/')+1);
@@ -341,29 +342,25 @@ stashboard.fillIndex = function() {
             $('<a />', { 
                 'class': 'feed-icon',
                 href: "/feed/services/" + slug + "/events"})
-            .css('background-position',stashboard.feedIconPos)
+            .css('background-position', sprites.feed.pos)
         ).appendTo(tr);
 
         if (fetchStatuses) {
-            imageRow = informationImage;
+            imagePos = informationPos;
         }
         
         $('<td />', {"class": "status highlight"}).append(
             $('<a />', {
                 href: 'services/' + data.id,
-                html: $("<img />", {
-                    src: imageRow,
-                    alt: "Unknown Status"
-                })
-            })
+                title: "Unknown Status"
+            }).css('background-position', imagePos)
         ).appendTo(tr);
 
         for (var i=0; i < numDays; i++) {
             $("<td />", {"class": "status"}).append(
-                $("<img />", {
-                    src: imageRow,
-                    alt: "Unknown Status"
-                })
+                $("<a />", {
+                    title: "Unknown Status"
+                }).css('background-position', imagePos)
             ).appendTo(tr);
         }
 
@@ -391,7 +388,7 @@ stashboard.fillIndex = function() {
                 error: function(evt){ 
                     $("#" + data.id + " td.highlight a")
                         .empty()
-                        .css('background-position',stashboard.defaultStatusPos)
+                        .css('background-position', defaultPos)
                         .parent().parent()
                         .attr("title", defaultHover);
                 }
@@ -441,7 +438,7 @@ stashboard.fillIndex = function() {
                         } else {
                             td.html($("<a />", {href: url})
                             .attr("title", defaultHover)
-                            .css('background-position', stashboard.defaultStatusPos));
+                            .css('background-position', defaultPos));
                         }
                     }
 

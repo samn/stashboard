@@ -51,6 +51,7 @@ import logging
 import urlparse
 from wsgiref.handlers import format_date_time
 from time import mktime
+import jsonpickle
 
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -141,8 +142,7 @@ class RootHandler(restful.Controller):
         td["start_date"] = start_date - timedelta(days=1)
         td["end_date"] = end_date - timedelta(days=1)
         td["history_size"] = history_size
-        td["default_status_pos"] = sprites.default_status_pos
-        td["feed_icon_pos"] = sprites.sprites['statuses']['sections']['feed']['pos']
+        td["sprites"] = jsonpickle.encode(sprites.sprites)
         td["regions"] = regions
 
         self.render(td, 'index.html')
