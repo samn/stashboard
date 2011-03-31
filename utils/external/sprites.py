@@ -21,6 +21,7 @@
 sprites = {
     "statuses": {
         "url": "/images/icons-sprite.gif",
+        "default": "check",
         "sections": {
             "check" :{
                 "pos": "0px 0px"

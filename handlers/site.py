@@ -180,6 +180,7 @@ class ServiceHandler(restful.Controller):
             
         td = default_template_data()
         td["service"] = service_slug
+        td["sprites"] = jsonpickle.encode(sprites.sprites)
         
         if start_date and end_date:
             start_stamp = mktime(start_date.timetuple())

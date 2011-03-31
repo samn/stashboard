@@ -326,7 +326,7 @@ stashboard.fillIndex = function() {
 
     var createServiceRow = function(data, fetchStatuses){
         var sprites = stashboard.sprites.statuses.sections;
-        var defaultPos = sprites.check.pos;
+        var defaultPos = sprites[stashboard.sprites.statuses.default].pos;
         var defaultHover = "The Service Is Up";
         var informationPos = sprites.question.pos;
         var imagePos = defaultPos;
@@ -671,11 +671,15 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         url: "/api/v1/services/" + serviceName,
         dataType: "json",
         success: function(service){
-
+            var pos = service['current-event'] != null ?
+                        service['current-event'].status.pos :
+                        stashboard.sprites.statuses.sections[stashboard.sprites.statuses.default].pos;
             $("h2 span").html($("<a />", {
                 text: service.name,
                 href: '/services/' + serviceName
-            }));
+            }).after(
+                $("<p/>")
+                .css('background-position', pos)));
             $("#serviceDescription").text(service.description);
             $("#serviceRegion").text(service.region);
 

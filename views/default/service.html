@@ -6,20 +6,22 @@
 {% block js_end %}
     <script type="text/javascript">
       $(document).ready(function(){
-        var startDate = false;
-        var endDate = false;
         var isAdmin = false;
         var service = "{{ service }}";
 
         {% if start_date %}
           var startDate = new Date("{{ start_date_stamp }}");
           var endDate = new Date("{{ end_date_stamp }}");
+        {% else %}
+          var startDate = false;
+          var endDate = false;
         {% endif %}
 
         {% if user_is_admin %}
           var isAdmin = true;
         {% endif %}
 
+        stashboard.sprites = {{sprites|safe}};
         stashboard.fillService(service, isAdmin, startDate, endDate);
       });
     </script>
