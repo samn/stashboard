@@ -218,28 +218,15 @@ td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;
     font-size: 10px;
 }
 
-#announcements-title {
-    font-weight: bold;
-    display: none;
-}
-
-div.announcement {
-    padding: 10px; 
-}
-
-div.announcement-date {
-    font-weight: bold;
-    padding: 5px;
-}
-
+#announcements-title, #announcements {padding: 0 0 15px 25px;}
+#announcements-title {font-weight:bold;display:none;padding-bottom:0;}
+div.announcement {padding: 10px;}
+div.announcement-message {padding-left: 10px;}
+div.announcement-date {font-weight: bold; padding: 5px;}
 div.announcement-date a {
     text-decoration: underline;
     font-weight: normal;
     padding-left: 5px;
-}
-
-div.announcement-message {
-    padding-left: 10px;
 }
 
 a.feed-icon { float:right; height:19px;}
