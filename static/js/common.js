@@ -247,7 +247,7 @@ stashboard.fillIndex = function() {
         function makeDateCell() {
             return $("<th />", {
                 "class": "date",
-                text: $.datepicker.formatDate("dd-M-yy", d);
+                text: $.datepicker.formatDate("dd-M-yy", d)
             });
         }
         var today = $('th.today');
