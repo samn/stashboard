@@ -55,9 +55,10 @@ stashboard.fillLegend = function(isAdmin) {
     var createStatusRow = function(data){
         var leg = $("#legend-bar");
 
-        $("<li />", {text:data.description})
-        .css('background-position', data.pos)
-        .appendTo(leg);
+        $("<li />", {
+            text:data.description,
+            style:'background-position:'+data.pos
+        }).appendTo(leg);
 
         if (isAdmin) {
 
@@ -328,6 +329,8 @@ stashboard.fillIndex = function() {
         var sprites = stashboard.sprites.statuses.sections;
         var defaultPos = sprites[stashboard.sprites.statuses.default].pos;
         var defaultHover = "The Service Is Up";
+        var unknownHover = 'Unknown Status';
+        var feedIconHover = 'Atom Feed';
         var informationPos = sprites.question.pos;
         var imagePos = defaultPos;
         var tr = $('<tr />', {id: data.id});
@@ -342,8 +345,10 @@ stashboard.fillIndex = function() {
         ).append(
             $('<a />', { 
                 'class': 'feed-icon',
-                href: "/feed/services/" + slug + "/events"})
-            .css('background-position', sprites.feed.pos)
+                href: "/feed/services/" + slug + "/events",
+                title: feedIconHover,
+                style: 'background-position:' + sprites.feed.pos
+            })
         ).appendTo(tr);
 
         if (fetchStatuses) {
@@ -354,16 +359,18 @@ stashboard.fillIndex = function() {
         $('<td />', {"class": "status highlight"}).append(
             $('<a />', {
                 href: 'services/' + data.id,
-                title: "Unknown Status"
-            }).css('background-position', imagePos)
+                title: unknownHover,
+                style: 'background-position:' + imagePos
+            })
         ).appendTo(tr);
 
         // render past statuses
         for (var i=0; i < numDays; i++) {
             $("<td />", {"class": "status"}).append(
-                $("<a />", {
-                    title: "Unknown Status"
-                }).css('background-position', imagePos)
+                $("<a />" , {
+                    title: unknownHover,
+                    style: "background-postion:"+imagePos
+                })
             ).appendTo(tr);
         }
 
@@ -375,11 +382,13 @@ stashboard.fillIndex = function() {
                 dataType: 'json', 
                 success: function(evt){ 
                     $("#" + data.id + " td.highlight a")
-                    .empty()
-                    // update the status icon (from the loading icon)
-                    .css('background-position',evt.status.pos)
-                    // and the hover text
-                    .parent().parent().attr("title", evt.message);
+                      .empty()
+                      // update the status icon (from the loading icon)
+                      .css('background-position',evt.status.pos)
+                      // and the hover text
+                      .attr("title", evt.message)
+                      .parent()
+                        .attr("title", evt.message);
 
                     if (evt.informational) {
                         $("#" + data.id + " td.highlight a").append(
@@ -392,11 +401,12 @@ stashboard.fillIndex = function() {
                 },
                 // an error indicates that there is no current event,
                 // i.e. that the service is up, so use the defaults
-                error: function(evt){ 
+                error: function(evt) {
                     $("#" + data.id + " td.highlight a")
-                        .empty()
-                        .css('background-position', defaultPos)
-                        .parent().parent()
+                      .empty()
+                      .css('background-position', defaultPos)
+                      .attr("title", defaultHover)
+                      .parent()
                         .attr("title", defaultHover);
                 }
             });
@@ -440,15 +450,17 @@ stashboard.fillIndex = function() {
                         url = "/services/" + data.id + "/" + d.getFullYear() + "/";
                         url += (d.getMonth() + 1) + "/" + d.getDate();
 
+                        var title = defaultHover;
+                        var style = 'background-position:' + defaultPos;
                         if (calendar[d.getDate()] != false) {
-                            td.html($("<a />", {href: url})
-                            .attr("title", events[calendar[d.getDate()]].message)
-                            .css('background-position',events[calendar[d.getDate()]].status.pos));
-                        } else {
-                            td.html($("<a />", {href: url})
-                            .attr("title", defaultHover)
-                            .css('background-position', defaultPos));
+                            title = events[calendar[d.getDate()]].message;
+                            style = 'background-position:'+events[calendar[d.getDate()]].status.pos;
                         }
+                        td.html($("<a />", {
+                            href: url,
+                            title: title,
+                            style: style
+                        })).attr('title', title);
                     }
 
                 },
@@ -632,17 +644,18 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         url: "/api/v1/services/" + serviceName,
         dataType: "json",
         success: function(service){
+            $("#serviceDescription").text(service.description);
+            $("#serviceRegion").text(service.region);
+
             var pos = service['current-event'] != null ?
                         service['current-event'].status.pos :
                         stashboard.sprites.statuses.sections[stashboard.sprites.statuses.default].pos;
-            $("h3 span").html($("<a />", {
-                text: service.name,
-                href: '/services/' + serviceName
-            }).after(
-                $("<p/>")
-                .css('background-position', pos)));
-            $("#serviceDescription").text(service.description);
-            $("#serviceRegion").text(service.region);
+            $("h3 span").html(
+                $("<a />", {
+                    text: service.name,
+                    href: '/services/' + serviceName
+                }).after(
+                    $('<p/>', {style:'background-position:'+pos})));
 
             var populateStatuses = function(current) {
 
