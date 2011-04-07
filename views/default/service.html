@@ -42,7 +42,7 @@
 
         {% endif %}
 
-        <h2><span></span></h2>
+        <h3><span></span></h3>
 
 	<p id="serviceDescription"></p> | <p id="serviceRegion"></p>
 
@@ -52,20 +52,7 @@
           </h3>
         {% endif %}
 
-        <table class="event-log" cellpadding="10">
-          <thead>
-            <tr>
-              <th class="time-header">Time</th>
-              <th class="status-header">Status</th>
-              <th>Message</th>
-              {% if user_is_admin %}
-                <th class="delete-header">Delete</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody id="events-tbody">
-          </tbody>
-        </table>
+        <div class="event-log"></div>
 
         {% if user_is_admin %}
           <a class="button" id="delete-service">

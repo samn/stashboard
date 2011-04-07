@@ -604,65 +604,28 @@ stashboard.adminRegionTabs = function() {
 
 stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
     var createRow = function(data) {
+        var div = $('<div />');
         var d = new Date(data.timestamp);
-        var time = $.datepicker.formatDate("MM d, ", d);
-        var hour;
-        var period; 
+        var time = $.datepicker.formatDate("MM d, yy", d);
 
-        if (d.getHours() < 12) {
-            if (d.getHours() === 0) {
-                hour = 12;
-            } else {
-                hour = d.getHours();
-            }
-            period = "AM";
-        } else if (d.getHours() == 12){
-            hour = d.getHours();
-            period = "PM";
-        } else {
-            hour = d.getHours() - 12;
-            period = "PM";
-        }
-
-        if (d.getMinutes() < 10) {
-            time += hour + ":0" + d.getMinutes() + period; 
-        } else {
-            time += hour + ":" + d.getMinutes() + period;
-        }
-
-        var tr = $('<tr />');
-
-        $('<td />', {text: time}).appendTo(tr);
-
-        if (data.informational) {
-            image = "/images/status/information.png";
-        } else {
-            image = data.status.image;
-        }
-
-        $('<td />', {"class": "status highlight"}).append(
-            $('<img />', {
-                src: image, 
-                alt: data.status.name
-            })
-        ).appendTo(tr);
-
-        $('<td />', {text: data.message}).appendTo(tr);
+        $('<div />', {'class': 'event-msg', text: data.message}).appendTo(div);
+        time = '<p>Posted On: </p>' + time;
+        $('<div />', {'class': 'event-date', html: time}).appendTo(div);
 
         if (isAdmin) {
 
-            $('<td />', {"class": "delete"}).append(
+            $('<div />', {"class": "delete"}).append(
                 $('<a />', {href: data.url}).append(
                     $('<img />', {
                         src: "/images/status/minus-circle.png",
                         alt: "Delete"
                     })
                 )
-            ).appendTo(tr);
+            ).appendTo(div);
 
         }
 
-        return tr;
+        return div;
     };
 
 
@@ -674,7 +637,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
             var pos = service['current-event'] != null ?
                         service['current-event'].status.pos :
                         stashboard.sprites.statuses.sections[stashboard.sprites.statuses.default].pos;
-            $("h2 span").html($("<a />", {
+            $("h3 span").html($("<a />", {
                 text: service.name,
                 href: '/services/' + serviceName
             }).after(
@@ -683,7 +646,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
             $("#serviceDescription").text(service.description);
             $("#serviceRegion").text(service.region);
 
-            var populatStatuses = function(current) {
+            var populateStatuses = function(current) {
 
                 $.ajax({
                     type: "GET",
@@ -726,24 +689,24 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 type: "GET",
                 url: eventsURL,
                 dataType: "json",
-                context: $(".event-log").children('tbody'), 
+                context: $(".event-log"), 
                 success: function(data){
 
                     var events = data.events;
                     var length = events.length;
 
                     if (length > 0) {
-                        populatStatuses(events[0].status.name);
+                        populateStatuses(events[0].status.name);
                         for (var i=0; i < length; i++) {
                             var tr = createRow(events[i]);
                             $(this).append(tr);  
                         }
                     } else {
-                        populatStatuses();
+                        populateStatuses();
                     }
                 },
                 error: function(){
-                    populatStatuses();
+                    populateStatuses();
                 }
             });
 
@@ -874,7 +837,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                                     $("#edit-service-modal").dialog('close');
                                     $("#serviceDescription").text(data.description);
                                     $("#serviceRegion").text(data.region);
-                                    $("h2 span").text(data.name);
+                                    $("h3 span").text(data.name);
                                     $("#service-name").val(data.name);
                                     $("#service-description").val(data.description);
                                     $("#service-region").val(data.region);
