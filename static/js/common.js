@@ -63,11 +63,11 @@ stashboard.fillLegend = function(isAdmin) {
 
             var edit = $("<a />", {text: "Edit", href: data.url});
 
-            $("<td />", {"class": "level", text: data.level}).appendTo(tr);
-            $("<td />", {html: edit}).appendTo(tr);
+            $("<td />", {"class": "level", text: data.level}).appendTo(leg);
+            $("<td />", {html: edit}).appendTo(leg);
             $("<td />", {html: 
                 $("<a />", {text: "Delete", href: data.url, "class": "delete-status"})
-            }).appendTo(tr);
+            }).appendTo(leg);
 
             edit.click(function(e) {
                 e.preventDefault();
@@ -608,12 +608,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         var d = new Date(data.timestamp);
         var time = $.datepicker.formatDate("MM d, yy", d);
 
-        $('<div />', {'class': 'event-msg', text: data.message}).appendTo(div);
-        time = '<p>Posted On: </p>' + time;
-        $('<div />', {'class': 'event-date', html: time}).appendTo(div);
-
         if (isAdmin) {
-
             $('<div />', {"class": "delete"}).append(
                 $('<a />', {href: data.url}).append(
                     $('<img />', {
@@ -622,8 +617,11 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                     })
                 )
             ).appendTo(div);
-
         }
+        $('<div />', {'class': 'event-msg', text: data.message}).appendTo(div);
+        time = '<p>Posted On: </p>' + time;
+        $('<div />', {'class': 'event-date', html: time}).appendTo(div);
+
 
         return div;
     };

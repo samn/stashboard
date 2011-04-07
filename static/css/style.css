@@ -85,9 +85,10 @@ h3.date-range {color: #999; margin-top: 20px}
 #webservices tbody a {text-decoration: underline;}
 #webservices tbody .status a, a.feed-icon {background-image:url('/images/icons-sprite.gif');background-repeat:no-repeat;padding: 1px 30px 0 0;}
 
-#webservices .event-log div {padding:5px 0 5px 0;}
+#webservices .event-log div {padding:10px 0 10px 0;}
 #webservices .event-log div .event-msg {padding:5px 0 5px 0;}
 #webservices .event-log div .event-date p {display:inline;font-weight:bold;}
+#webservices .event-log div .delete {display:inline;float:right;}
 .status-header {width: 10%;}
 .time-header {width: 20%;}
 .delete-header {width: 8%;}
