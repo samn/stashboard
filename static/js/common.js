@@ -247,7 +247,7 @@ stashboard.fillIndex = function() {
         function makeDateCell() {
             return $("<th />", {
                 "class": "date",
-                text: (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
+                text: $.datepicker.formatDate("dd-M-yy", d);
             });
         }
         var today = $('th.today');
@@ -934,7 +934,7 @@ stashboard.fillAnnouncements = function(isAdmin) {
 
         var date = $("<div />", {
             "class": "announcement-date",
-            "html": (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear().toString().substr(2)
+            "html": $.datepicker.formatDate("dd-M-yy", d)
         });
 
         if (isAdmin) {
