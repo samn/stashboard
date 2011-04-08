@@ -471,9 +471,10 @@ stashboard.fillIndex = function() {
 
                         var hover = defaultHover;
                         var style = 'background-position:' + defaultPos;
-                        if (calendar[d.getDate()] != false) {
-                            hover = events[calendar[d.getDate()]].message;
-                            style = 'background-position:'+events[calendar[d.getDate()]].status.pos;
+                        if (calendar[d.getDate()] !== false) {
+                            var evtIdx = calendar[d.getDate()];
+                            hover = events[evtIdx].message;
+                            style = 'background-position:'+events[evtIdx].status.pos;
                         }
 
                         var ttWidth = tooltipWidth(hover);
@@ -482,6 +483,7 @@ stashboard.fillIndex = function() {
                             text: hover
                         }).css('width', ttWidth+"px")
                           .css('left', tooltipPos(ttWidth));
+
                         td.html($("<a />", {
                             href: url,
                             style: style,
