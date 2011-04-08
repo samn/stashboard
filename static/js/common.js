@@ -405,8 +405,8 @@ stashboard.fillIndex = function() {
                       .attr("title", "")
                       .children('.tooltip')
                         .text(defaultHover)
-                        .css('width', '150px')
-                        .css('left', '-75px')
+                        .css('width', '100px')
+                        .css('left', '-50px')
                 }
             });
 
