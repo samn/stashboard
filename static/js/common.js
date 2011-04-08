@@ -456,10 +456,7 @@ stashboard.fillIndex = function() {
                     for (i=0; i < events.length; i++) {
                         var e = events[i];
                         var evtDate = new Date(e.timestamp);
-                        calendar[evtDate.getDate()] = false;
-                        if (e.informational || e.status.level !== "NORMAL") {
-                            calendar[evtDate.getDate()] = i;
-                        }
+                        calendar[evtDate.getDate()] = i;
                     }
 
                     for (i= days.length-1; i >= 0; i--) {
