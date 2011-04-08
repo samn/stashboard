@@ -106,6 +106,7 @@ h3.date-range {color: #999; margin-top: 20px}
     color:#FFFFFF;
     font-size:12px;
     background-color:#000000;
+    border-radius:5px;
     filter:alpha(opacity=80);
     -moz-opacity:0.80;
     -khtml-opacity: 0.80;
