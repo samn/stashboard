@@ -86,7 +86,7 @@ h3.date-range {color: #999; margin-top: 20px}
 #webservices tbody .status a, a.feed-icon {
     background-image:url('/images/icons-sprite.gif');
     background-repeat:no-repeat;
-    padding:1px 30px 0 0;
+    padding:1px 20px 0 0;
     height:20px;
     display:inline-block;
 }
