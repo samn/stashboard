@@ -66,7 +66,7 @@ stashboard.fillLegend = function(isAdmin) {
         if (isAdmin) {
             var edit = $("<a />", {text: "Edit", href: data.url});
 
-            $("<p />", {"class": "level", text: data.level}).appendTo(status);
+            $("<p />", {"class": "level", text: "Level: "+data.level}).appendTo(status);
             $("<a />", {text: "Delete", href: data.url, "class": "delete-status"}).appendTo(status);
 
             edit.click(function(e) {
