@@ -358,7 +358,8 @@ stashboard.fillIndex = function() {
             $('<a />', {
                 href: 'services/' + data.id,
                 title: unknownHover,
-                style: 'background-position:' + imagePos
+                style: 'background-position:' + imagePos,
+                html: $('<span />', {'class': 'tooltip'})
             })
         ).appendTo(tr);
 
@@ -380,13 +381,12 @@ stashboard.fillIndex = function() {
                 dataType: 'json', 
                 success: function(evt){ 
                     $("#" + data.id + " td.highlight a")
-                      .empty()
                       // update the status icon (from the loading icon)
                       .css('background-position',evt.status.pos)
                       // and the hover text
-                      .attr("title", evt.message)
-                      .parent()
-                        .attr("title", evt.message);
+                      .attr("title", "")
+                      .children('.tooltip')
+                        .text(evt.message)
 
                     if (evt.informational) {
                         $("#" + data.id + " td.highlight a").append(
@@ -401,11 +401,12 @@ stashboard.fillIndex = function() {
                 // i.e. that the service is up, so use the defaults
                 error: function(evt) {
                     $("#" + data.id + " td.highlight a")
-                      .empty()
                       .css('background-position', defaultPos)
-                      .attr("title", defaultHover)
-                      .parent()
-                        .attr("title", defaultHover);
+                      .attr("title", "")
+                      .children('.tooltip')
+                        .text(defaultHover)
+                        .css('width', '150px')
+                        .css('left', '-75px')
                 }
             });
 
