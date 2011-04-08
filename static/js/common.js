@@ -456,7 +456,11 @@ stashboard.fillIndex = function() {
                     for (i=0; i < events.length; i++) {
                         var e = events[i];
                         var evtDate = new Date(e.timestamp);
-                        calendar[evtDate.getDate()] = i;
+                        
+                        // Events are sorted in descending order by date
+                        if (calendar[evtDate.getDate()] === false) {
+                            calendar[evtDate.getDate()] = i; 
+                        }
                     }
 
                     for (i= days.length-1; i >= 0; i--) {
