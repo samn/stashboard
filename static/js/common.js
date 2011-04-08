@@ -55,34 +55,30 @@ stashboard.fillLegend = function(isAdmin) {
     var createStatusRow = function(data){
         var leg = $("#legend-bar");
 
-        $("<li />", {
-            text:data.description,
-            style:'background-position:'+data.pos
-        }).appendTo(leg);
+        var status = $("<li />", {
+            html: $("<p />", {
+              "class":"icon",
+              style:'background-position:'+data.pos,
+              text:data.description
+            })
+        });
 
         if (isAdmin) {
-
             var edit = $("<a />", {text: "Edit", href: data.url});
 
-            $("<td />", {"class": "level", text: data.level}).appendTo(leg);
-            $("<td />", {html: edit}).appendTo(leg);
-            $("<td />", {html: 
-                $("<a />", {text: "Delete", href: data.url, "class": "delete-status"})
-            }).appendTo(leg);
+            $("<p />", {"class": "level", text: data.level}).appendTo(status);
+            $("<a />", {text: "Delete", href: data.url, "class": "delete-status"}).appendTo(status);
 
             edit.click(function(e) {
                 e.preventDefault();
                 var a = $(e.target);
-                var tr = a.parent().parent();
-                var img = tr.children(".icon").children("img");
-                //This is somewhat ugly
-                var value = img.attr("src").split("/").pop().slice(0, -4);
+                var li = a.parent();
 
-                $("#status-name").val(img.attr("alt"));
-                $("#status-description").val(tr.children(".description").text());
-                $("#statusLevel").val(tr.children(".level").text());
+                $("#status-name").val(data.name);
+                $("#status-description").val(data.description);
+                $("#statusLevel").val(data.level);
                 $("input[name=status-image]:checked").attr("checked", false);
-                $("input[value=" + value + "]").attr("checked", true);
+                $("input[value=" + data.level + "]").attr("checked", true);
 
                 $("#add-status-modal").dialog({
                     height: 515,
@@ -102,7 +98,7 @@ stashboard.fillLegend = function(isAdmin) {
                                     level: $("#statusLevel").val()
                                 },
                                 dataType: 'json', 
-                                context: tr,
+                                context: li,
                                 success: function(data){ 
                                     $("#add-status-modal").dialog('close');
                                     this.children(".description").text(data.description);
@@ -121,8 +117,10 @@ stashboard.fillLegend = function(isAdmin) {
                         }
                     }
                 });
-          });
+          }).appendTo(status);
       }
+
+      status.appendTo(leg);
     };
 
     $("#add-status").click(function(){
@@ -222,7 +220,7 @@ stashboard.fillLegend = function(isAdmin) {
                           dataType: 'json',
                           context: $("#delete-status-modal"),
                           success: function(data){
-                              a.parent().parent().remove();
+                              a.parent().remove();
                               this.dialog('close');
                           },
                           error: function(){
