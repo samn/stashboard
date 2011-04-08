@@ -327,12 +327,27 @@ stashboard.fillIndex = function() {
         var sprites = stashboard.sprites.statuses.sections;
         var defaultPos = sprites[stashboard.sprites.statuses.default].pos;
         var defaultHover = "The Service Is Up";
-        var defaultHoverWidth = '-50px';
         var unknownHover = 'Unknown Status';
         var feedIconHover = 'Atom Feed';
         var informationPos = sprites.question.pos;
         var imagePos = defaultPos;
         var tr = $('<tr />', {id: data.id});
+
+        // Return the width (in pixels) that a tooltip should be
+        // to contain message
+        function tooltipWidth(message) {
+            var maxHoverWidth = 400;
+            var textWidth = 6 * message.length;
+            return  textWidth < maxHoverWidth ?
+                                textWidth :
+                                maxHoverWidth;
+        }
+
+        // Return a string to be used as left position property 
+        // so the element will be centered
+        function tooltipPos(width) {
+            return -width/2 + "px";
+        }
 
         // render the service name and feed icon
         var slug = data.url.substr(data.url.lastIndexOf('/')+1);
@@ -381,6 +396,7 @@ stashboard.fillIndex = function() {
                 url: "/api/v1/services/" + data.id + "/events/current",
                 dataType: 'json', 
                 success: function(evt){ 
+                    var ttWidth = tooltipWidth(evt.message);
                     $("#" + data.id + " td.highlight a")
                       // update the status icon (from the loading icon)
                       .css('background-position',evt.status.pos)
@@ -388,6 +404,8 @@ stashboard.fillIndex = function() {
                       .attr("title", "")
                       .children('.tooltip')
                         .text(evt.message)
+                        .css('width', ttWidth+"px")
+                        .css('left', tooltipPos(ttWidth));
 
                     if (evt.informational) {
                         $("#" + data.id + " td.highlight a").append(
@@ -401,13 +419,14 @@ stashboard.fillIndex = function() {
                 // an error indicates that there is no current event,
                 // i.e. that the service is up, so use the defaults
                 error: function(evt) {
+                    var ttWidth = tooltipWidth(defaultHover);
                     $("#" + data.id + " td.highlight a")
                       .css('background-position', defaultPos)
                       .attr("title", "")
                       .children('.tooltip')
                         .text(defaultHover)
-                        .css('width', '100px')
-                        .css('left', defaultHoverWidth)
+                        .css('width', ttWidth+"px")
+                        .css('left', tooltipPos(ttWidth));
                 }
             });
 
@@ -457,20 +476,17 @@ stashboard.fillIndex = function() {
                             style = 'background-position:'+events[calendar[d.getDate()]].status.pos;
                         }
 
-                        var link = $("<a />", {
+                        var ttWidth = tooltipWidth(hover);
+                        var tooltip = $('<span />', {
+                            'class': 'tooltip',
+                            text: hover
+                        }).css('width', ttWidth+"px")
+                          .css('left', tooltipPos(ttWidth));
+                        td.html($("<a />", {
                             href: url,
                             style: style,
-                            html: $('<span />', {
-                              'class': 'tooltip',
-                              text: hover
-                            })
-                        });
-                        if (hover == defaultHover) {
-                            link.children('.tooltip')
-                              .css('width', '100px')
-                              .css('left', defaultHoverWidth);
-                        }
-                        td.html(link);
+                            html: tooltip
+                        }))
                     }
 
                 },
