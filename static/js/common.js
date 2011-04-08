@@ -327,6 +327,7 @@ stashboard.fillIndex = function() {
         var sprites = stashboard.sprites.statuses.sections;
         var defaultPos = sprites[stashboard.sprites.statuses.default].pos;
         var defaultHover = "The Service Is Up";
+        var defaultHoverWidth = '-50px';
         var unknownHover = 'Unknown Status';
         var feedIconHover = 'Atom Feed';
         var informationPos = sprites.question.pos;
@@ -406,7 +407,7 @@ stashboard.fillIndex = function() {
                       .children('.tooltip')
                         .text(defaultHover)
                         .css('width', '100px')
-                        .css('left', '-50px')
+                        .css('left', defaultHoverWidth)
                 }
             });
 
@@ -449,17 +450,27 @@ stashboard.fillIndex = function() {
                         url = "/services/" + data.id + "/" + d.getFullYear() + "/";
                         url += (d.getMonth() + 1) + "/" + d.getDate();
 
-                        var title = defaultHover;
+                        var hover = defaultHover;
                         var style = 'background-position:' + defaultPos;
                         if (calendar[d.getDate()] != false) {
-                            title = events[calendar[d.getDate()]].message;
+                            hover = events[calendar[d.getDate()]].message;
                             style = 'background-position:'+events[calendar[d.getDate()]].status.pos;
                         }
-                        td.html($("<a />", {
+
+                        var link = $("<a />", {
                             href: url,
-                            title: title,
-                            style: style
-                        })).attr('title', title);
+                            style: style,
+                            html: $('<span />', {
+                              'class': 'tooltip',
+                              text: hover
+                            })
+                        });
+                        if (hover == defaultHover) {
+                            link.children('.tooltip')
+                              .css('width', '100px')
+                              .css('left', defaultHoverWidth);
+                        }
+                        td.html(link);
                     }
 
                 },
