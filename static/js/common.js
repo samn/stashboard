@@ -51,6 +51,16 @@ stashboard.rfc1123 = function(date){
     return rfc + " " + off;
 };
 
+// Set the time of a date to 1 second before midnight.
+// So when the date is sent to specify an end date it will
+// include records on the day of date as well.
+stashboard.shiftToMidnight = function(date) {
+    date.setHours(23);
+    date.setMinutes(59);
+    date.setSeconds(59);
+    return date;
+};
+
 stashboard.fillLegend = function(isAdmin) {
     var createStatusRow = function(data){
         var leg = $("#legend-bar");
@@ -432,9 +442,10 @@ stashboard.fillIndex = function() {
 
 
             // now retrieve the past statuses
+            var endDate = stashboard.shiftToMidnight(stashboard.endDate);
             var url = "/api/v1/services/" + data.id + "/events";
             url += "?start=" + stashboard.rfc1123(stashboard.startDate);
-            url += "&end=" + stashboard.rfc1123(stashboard.endDate);
+            url += "&end=" + stashboard.rfc1123(endDate);
 
             $.ajax({ 
                 type: "GET",
@@ -720,6 +731,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             if (start_date){
                 var start = stashboard.rfc1123(start_date);
+                endDate = stashboard.shiftToMidnight(end_date);
                 var end = stashboard.rfc1123(end_date);
                 eventsURL += "?start=" + start;
                 eventsURL += "&end=" + end;
