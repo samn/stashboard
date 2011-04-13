@@ -335,7 +335,7 @@ stashboard.fillIndex = function() {
 
     var createServiceRow = function(data, fetchStatuses){
         var sprites = stashboard.sprites.statuses.sections;
-        var defaultPos = sprites[stashboard.sprites.statuses.default].pos;
+        var defaultPos = sprites[stashboard.sprites.statuses['default']].pos;
         var defaultHover = "The Service Is Up";
         var unknownHover = 'Unknown Status';
         var feedIconHover = 'Atom Feed';
@@ -689,7 +689,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             var pos = service['current-event'] != null ?
                         service['current-event'].status.pos :
-                        stashboard.sprites.statuses.sections[stashboard.sprites.statuses.default].pos;
+                        stashboard.sprites.statuses.sections[stashboard.sprites.statuses['default']].pos;
             $("h3 span").html(
                 $("<a />", {
                     text: service.name,
