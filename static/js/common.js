@@ -912,7 +912,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         error: function(){}
     });
 
-    $("td.delete a").live('click', function(e){
+    $(".event-log div .delete a").live('click', function(e){
         e.preventDefault();
         $.ajax({ 
             type: "DELETE",
@@ -925,7 +925,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 });
             },
             error: function(){
-                stashboard.error("Could not deleted event. Please try again");
+                stashboard.error("Could not delete event. Please try again");
             }
         });
     });
