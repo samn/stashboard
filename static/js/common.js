@@ -804,8 +804,8 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                                 context:$("#add-event-modal"), 
                                 success: function(data){
                                     this.dialog('close');
-                                    var tr = createRow(data);
-                                    $(".event-log").children('tbody').prepend(tr);
+                                    var div = createRow(data);
+                                    $(".event-log").prepend(div);
                                 },
                                 error: function(){
                                     this.dialog('close');
