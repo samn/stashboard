@@ -259,34 +259,33 @@ class EventsListHandler(restful.Controller):
             message = self.request.get("message", default_value=None)
             informational = self.request.get("informational", default_value=None)
 
-            if message:
+            if not status_slug:
+                event = service.current_event()
+                if event:
+                    status = event.status
+                else:
+                    status = Status.default()
+            else:
+                status = Status.get_by_slug(status_slug)
+
+            if status:
                 service = Service.get_by_slug(service_slug)
                 if service:
+                    if not message:
+                        message = status.description
 
-                    if not status_slug:
-                        event = service.current_event()
-                        if event:
-                            status = event.status
-                        else:
-                            status = Status.default()
-                    else:
-                        status = Status.get_by_slug(status_slug)
+                    e = Event(status=status, service=service,
+                            message=message)
 
-                    if status:
-                        e = Event(status=status, service=service,
-                                message=message)
+                    e.informational = informational and informational == "true"
 
-                        e.informational = informational and informational == "true"
-
-                        e.put()
-                        self.json(e.rest(self.base_url(version)))
-                        add_hub_notification_task(service.name)
-                    else:
-                        self.error(404, "Status %s not found" % status_slug)
+                    e.put()
+                    self.json(e.rest(self.base_url(version)))
+                    add_hub_notification_task(service.name)
                 else:
                     self.error(404, "Service %s not found" % service_slug)
             else:
-                self.error(400, "Event message is required")
+                self.error(404, "Status %s not found" % status_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
 
@@ -490,7 +489,7 @@ class ImagesListHandler(restful.Controller):
             for sprite in sprites.sprites.values():
                 sprite["url"] = "http://" + host + sprite["url"]
 
-            if (sprites.sprites):
+            if (sprites):
                 self.json({"images": query})
             else:
                 self.error(404, "No images")
