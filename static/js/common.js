@@ -1000,7 +1000,7 @@ stashboard.fillAnnouncements = function(isAdmin) {
             date.append($('<a />', {
                 'href': '/api/v1/announcements?key='+announcement.key,
                 'text': 'Delete',
-                'class': 'delete-announcement',
+                'class': 'delete-announcement'
             }));
         }
         el.append(date);
