@@ -731,7 +731,6 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             if (start_date){
                 var start = stashboard.rfc1123(start_date);
-                endDate = stashboard.shiftToMidnight(end_date);
                 var end = stashboard.rfc1123(end_date);
                 eventsURL += "?start=" + start;
                 eventsURL += "&end=" + end;
