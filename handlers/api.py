@@ -259,18 +259,18 @@ class EventsListHandler(restful.Controller):
             message = self.request.get("message", default_value=None)
             informational = self.request.get("informational", default_value=None)
 
-            if not status_slug:
-                event = service.current_event()
-                if event:
-                    status = event.status
+            service = Service.get_by_slug(service_slug)
+            if service:
+                if not status_slug:
+                    event = service.current_event()
+                    if event:
+                        status = event.status
+                    else:
+                        status = Status.default()
                 else:
-                    status = Status.default()
-            else:
-                status = Status.get_by_slug(status_slug)
+                    status = Status.get_by_slug(status_slug)
 
-            if status:
-                service = Service.get_by_slug(service_slug)
-                if service:
+                if status:
                     if not message:
                         message = status.description
 
@@ -283,9 +283,9 @@ class EventsListHandler(restful.Controller):
                     self.json(e.rest(self.base_url(version)))
                     add_hub_notification_task(service.name)
                 else:
-                    self.error(404, "Service %s not found" % service_slug)
+                    self.error(404, "Status %s not found" % status_slug)
             else:
-                self.error(404, "Status %s not found" % status_slug)
+                self.error(404, "Service %s not found" % service_slug)
         else:
             self.error(404, "API Version %s not supported" % version)
 
