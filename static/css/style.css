@@ -71,6 +71,7 @@ h3.date-range {color: #999; margin-top: 20px}
 #add-status { margin-top: 20px;}
 
 /* wordpress entries styling - main content column */
+#webservices {margin-top: 5px;}
 #webservices table { width: 100%; border-spacing:10; font-size: 1.1em;}
 #webservices table a.arrow {text-decoration:none;cursor:pointer;color:#3b3b3b;}
 #webservices table a.arrow .disabled {cursor:default;}
