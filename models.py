@@ -330,7 +330,7 @@ class Event(db.Model):
         d['status_name'] = self.status.name
         d['start'] = self.start
         d['message'] = self.message
-        d['url'] = config.SITE.root_url +' /services/' + self.service.slug + '/' + self.start.strftime('%Y/%m/%d')
+        d['url'] = config.SITE['root_url'] +' /services/' + self.service.slug + '/' + self.start.strftime('%Y/%m/%d')
         
         return FeedData(d)
 
@@ -370,16 +370,16 @@ class Announcement(db.Model):
     @staticmethod
     def get_active(region=None):
         """ Return all announcements that should be displayed, with the most
-            recent first.  Filters by region is specified (but still includes
-            global announcements), if not retrieves only global announcements.
-            Returns a list of dictionary repersentations of announcements.
+            recent first.  Filters by region if specified (but still includes
+            global announcements), if not retrieves all announcements.
         """
         q = Announcement.all()
         q.order("-last_updated")
         q.filter('active = ', True)
-        q.filter('region IN ', (None, region))
-        
-        return [announcement.to_json() for announcement in q.fetch(100)]
+        if region:
+            q.filter('region IN ', (None, region))
+    
+        return q.fetch(100)
 
     def to_json(self):
         """ Return a dictionary representation of this object
@@ -406,7 +406,7 @@ class Announcement(db.Model):
         d['status_name'] = 'Announcement'
         d['start'] = self.last_updated
         d['message'] = self.message
-        d['url'] = config.SITE.root_url
+        d['url'] = config.SITE['root_url']
         
         return FeedData(d)
 
@@ -423,6 +423,5 @@ class FeedData(object):
             message
             url
     """
-    def __init__(self, **entries):
+    def __init__(self, entries):
         self.__dict__.update(entries)
-

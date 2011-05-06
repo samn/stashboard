@@ -573,7 +573,8 @@ class AnnouncementsListHandler(restful.Controller):
             if region:
                 region = Region.get_by_name(region)
 
-            self.json({"announcements": Announcement.get_active(region)})
+            announcements = [a.to_json() for a in Announcement.get_active(region)]
+            self.json({"announcements": announcements})
         else:
             self.error(404, "API Version %s not supported" % version)
 

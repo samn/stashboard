@@ -24,6 +24,12 @@ indexes:
 - kind: Announcement
   properties:
   - name: active
+  - name: last_updated
+    direction: desc
+
+- kind: Announcement
+  properties:
+  - name: active
   - name: region
   - name: last_updated
     direction: desc

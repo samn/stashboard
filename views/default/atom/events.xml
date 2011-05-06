@@ -14,26 +14,21 @@
     {% for event in events %}
     <entry>
         <id>tag:{{ host }},2010:{{ event.key }}</id>
-        <title>{{ event.service.region.name }}: {{ event.service.name }} - {{ event.status.name }}</title>
+        <title>{{ event.service_region_name }}: {{ event.service_name }} - {{ event.status_name }}</title>
         <updated>{{ event.start|date:"Y-m-d\TH:i:s\Z" }}</updated>
         <content>{{ event.message }}</content>
         <author>
             <name>{{ config.SITE.author }}</name>
         </author>
-        <link href="{{ config.SITE.root_url }}/services/{{ event.service.slug }}/{{ event.start|date:"Y/m/d" }}" />
+        <link href="{{ event.url }}" />
         <content>{{ event.message }}</content>
         <sb:id>{{ event.key }}</sb:id>
-        <sb:service>{{ event.service.name }}</sb:service>
-        <sb:region>{{ event.service.region.name }}</sb:region>
+        <sb:service>{{ event.service_name }}</sb:service>
+        <sb:region>{{ event.service_region_name }}</sb:region>
         <sb:timestamp>{{ event.start|date:"Y-m-d\TH:i:s\Z" }}</sb:timestamp>
         <sb:message>{{ event.message }}</sb:message>
-        <sb:url>{{ config.SITE.root_url }}/services/{{ event.service.slug }}/{{ event.start|date:"Y/m/d" }}</sb:url>
-        <sb:status>
-            <sb:id>{{ event.status.key }}</sb:id>
-            <title>{{ event.status.name }}</title>
-            <sb:name>{{ event.status.name }}</sb:name>
-            <sb:level>{{ event.status.get_level }}</sb:level>
-        </sb:status>
+        <sb:url>{{ event.url }}</sb:url>
+        <sb:status>{{ event.status_name }}</sb:status>
     </entry>
     {% endfor %}
 </feed>

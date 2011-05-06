@@ -24,7 +24,7 @@ import os
 
 from google.appengine.ext.webapp import RequestHandler, template
 
-from models import Status, Event, Service, Level, FeedData
+from models import Event, Service, FeedData, Announcement
 from utils.url import get_host
 import config
 
@@ -51,20 +51,27 @@ class ServicesEventsFeed(CustomRequestHandler):
                 self.send_404('Invalid service: %s' % (service_slug))
                 return
 
+            announcements = Announcement.get_active(service.region)
             events.filter('service = ', service)
         else:
             service = None
             path = 'feed/services/events'
             url = '%s/%s' % (config.SITE['root_url'], path)
+            announcements = Announcement.get_active()
 
         events = events.order('-start').fetch(limit)
 
-        if events:
-            updated = events[0].start
+        items = [i.feed_data() for i in events + announcements]
+        items.sort(key=lambda a: a.start)
+        items.reverse()
+        items = items[0:limit]
+
+        if items:
+            updated = items[0].start
         else:
             updated = None
 
-        template_data = {'config': config, 'events': events, 'url': url, \
+        template_data = {'config': config, 'events': items, 'url': url, \
                          'host': get_host(url), 'path': path, 'updated': updated, \
                          'service': service, \
                          'events_count': limit}
