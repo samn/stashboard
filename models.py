@@ -330,7 +330,7 @@ class Event(db.Model):
         d['status_name'] = self.status.name
         d['start'] = self.start
         d['message'] = self.message
-        d['url'] = config.SITE['root_url'] +' /services/' + self.service.slug + '/' + self.start.strftime('%Y/%m/%d')
+        d['url'] = config.SITE['root_url'] + '/services/' + self.service.slug + '/' + self.start.strftime('%Y/%m/%d')
         
         return FeedData(d)
 
