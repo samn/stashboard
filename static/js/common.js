@@ -252,6 +252,18 @@ stashboard.fillIndex = function() {
     var thead = $("#service-list thead tr");
     var numDays = Math.round((stashboard.endDate.getTime() - stashboard.startDate.getTime()) / 86400000);
 
+    var createFeedIcon = function(slug) {
+        slug = typeof(slug) != "undefined" ? slug + "/" : "";
+        var feedIconHover = "Atom Feed";;
+        var pos = stashboard.sprites.statuses.sections.feed.pos;
+        return $("<a />", { 
+            "class": "feed-icon",
+            href: "/feed/services/" + slug + "events",
+            title: feedIconHover,
+            style: "background-position:" + pos
+        });
+    }
+
     var createDates = function(numDays) {
         function makeDateCell() {
             return $("<th />", {
@@ -338,7 +350,6 @@ stashboard.fillIndex = function() {
         var defaultPos = sprites[stashboard.sprites.statuses['default']].pos;
         var defaultHover = "The Service Is Up";
         var unknownHover = 'Unknown Status';
-        var feedIconHover = 'Atom Feed';
         var informationPos = sprites.question.pos;
         var imagePos = defaultPos;
         var tr = $('<tr />', {id: data.id});
@@ -366,14 +377,8 @@ stashboard.fillIndex = function() {
                 href: 'services/' + data.id,
                 text: data.name
             })
-        ).append(
-            $('<a />', { 
-                'class': 'feed-icon',
-                href: "/feed/services/" + slug + "/events",
-                title: feedIconHover,
-                style: 'background-position:' + sprites.feed.pos
-            })
-        ).appendTo(tr);
+        ).append(createFeedIcon(slug))
+         .appendTo(tr);
 
         if (fetchStatuses) {
             imagePos = informationPos;
