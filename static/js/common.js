@@ -264,6 +264,9 @@ stashboard.fillIndex = function() {
         });
     }
 
+    // Add a feed icon with a link to the master feed
+    thead.children('th:first').append(createFeedIcon());
+
     var createDates = function(numDays) {
         function makeDateCell() {
             return $("<th />", {
