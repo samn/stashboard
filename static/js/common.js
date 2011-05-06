@@ -399,7 +399,7 @@ stashboard.fillIndex = function() {
             $("<td />", {"class": "status"}).append(
                 $("<a />" , {
                     title: unknownHover,
-                    style: "background-postion:"+imagePos
+                    style: "background-position:"+imagePos
                 })
             ).appendTo(tr);
         }
