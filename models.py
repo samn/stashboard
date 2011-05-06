@@ -322,6 +322,19 @@ class Event(db.Model):
 
         return m
 
+    def feed_data(self):
+        d = {}
+        d['key'] = self.key
+        d['service_region_name'] = self.service.region.name
+        d['service_name'] =  self.service.name
+        d['status_name'] = self.status.name
+        d['start'] = self.start
+        d['message'] = self.message
+        d['url'] = config.SITE.root_url +' /services/' + self.service.slug + '/' + self.start.strftime('%Y/%m/%d')
+        
+        return FeedData(d)
+
+
 class Profile(db.Model):
     owner = db.UserProperty(required=True)
     token = db.StringProperty(required=True)
@@ -380,3 +393,36 @@ class Announcement(db.Model):
             d['region'] = str(self.region.name)
 
         return d
+
+    def feed_data(self):
+        d = {}
+        d['key'] = self.key
+        if self.region:
+            d['service_region_name'] = self.region.name
+        else:
+            d['service_region_name'] = 'Global'
+
+        d['service_name'] =  'Announcement'
+        d['status_name'] = 'Announcement'
+        d['start'] = self.last_updated
+        d['message'] = self.message
+        d['url'] = config.SITE.root_url
+        
+        return FeedData(d)
+
+class FeedData(object):
+    """ A DTO of sorts that represents data that will be displayed
+          in an Atom feed.  
+
+        Expected Fields:
+            key
+            service_region_name 
+            service_name
+            status_name
+            start
+            message
+            url
+    """
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
