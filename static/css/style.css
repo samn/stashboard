@@ -264,12 +264,11 @@ a.feed-icon { float:right; height:19px;}
 #serviceDescription {padding-right:5px;}
 #serviceRegion {padding-left:5px;}
 #legend-bar {padding-left:30px;}
-#legend-bar li {display:table-cell; vertical-align:middle;}
-#legend-bar li > * {padding:5px 5px 5px 0;}
+#legend-bar li {display:inline;}
 #legend-bar li p.icon {
     background-image:url('/images/icons-sprite.gif');
     background-repeat:no-repeat;
-    padding:0px 30px 0 25px;
+    padding:0 30px 0 25px;
     height:20px;
     display:table-cell;
     vertical-align:middle;
