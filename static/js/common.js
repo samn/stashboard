@@ -663,7 +663,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
     var createRow = function(data) {
         var div = $('<div />');
         var d = new Date(data.timestamp);
-        var time = $.datepicker.formatDate("MM d, yy", d);
+        var date = $.datepicker.formatDate("MM d, yy", d);
 
         if (isAdmin) {
             $('<div />', {"class": "admin"}).append(
@@ -683,8 +683,8 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         ).append(
             $('<p />', {'class': 'event-msg', text: data.message})
         ).appendTo(div);
-        time = '<p>Posted On: </p>' + time;
-        $('<div />', {'class': 'event-date', html: time}).appendTo(div);
+        date = '<p>Posted On: </p>' + date;
+        $('<div />', {'class': 'event-date', html: date, val:data.timestamp}).appendTo(div);
 
 
         return div;
@@ -947,6 +947,12 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         var par = $(this).parent().parent();
         $("#eventMessage").val(par.find(".event-msg").html());
         $("#statusValue").val(par.find(".icon").val());
+        
+        var d = new Date(par.find(".event-date").val());
+        $("#date").val($.datepicker.formatDate("mm/d/yy", d));
+        var minutes = d.getUTCMinutes();
+        if (minutes < 10) { minutes = '0' + minutes; }
+        $("#time").val(d.getUTCHours() + ":" + minutes);
         $("#add-event-modal").dialog({
             height: 450,
             width: 460,
