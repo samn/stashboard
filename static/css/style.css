@@ -111,10 +111,18 @@ h3.date-range {color: #999; margin-top: 20px}
 }
 
 #webservices .event-log div {padding:10px 0 10px 0;width:450px;white-space:normal;word-wrap:break-word;}
-#webservices .event-log div .event-msg {padding:5px 0 5px 0;}
+#webservices .event-log div .event-msg {padding:5px 0 5px 0;display:inline;}
 #webservices .event-log div .event-date p {display:inline;font-weight:bold;}
 #webservices .event-log div .admin {display:inline;}
-#webservices .event-log div .admin .edit {padding-left:20px;}
+#webservices .event-log div .admin .edit {padding:0 20px 0 20px;}
+#webservices .event-log div p.icon {
+  background-image:url('/images/icons-sprite.gif');
+  background-repeat:no-repeat;
+  padding:0px 0 0 25px;
+  height:20px;
+  display:inline-block;
+  vertical-align:middle;
+}
 .status-header {width: 10%;}
 .time-header {width: 20%;}
 .delete-header {width: 8%;}
@@ -151,8 +159,10 @@ h3.date-range {color: #999; margin-top: 20px}
 td.status a{position: relative;}
 td.status a .information {position: absolute; top: 0px; left: 1px; z-index: 500;}
 
-.dialog label, .dialog textarea, .dialog input, .dialog select, .dialog button
-    { margin: 10px; clear: right;}
+.dialog label, .dialog textarea, .dialog input, .dialog select, .dialog button {
+  margin: 10px;
+  clear: right;
+}
     
 .dialog label, .dialog button, .dialog select {display: block;}
     

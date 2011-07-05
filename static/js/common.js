@@ -677,7 +677,12 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 $('<a />', {href:data.url, "class": "edit", text: "Edit"})
             ).appendTo(div);
         }
-        $('<div />', {'class': 'event-msg', text: data.message}).appendTo(div);
+        $('<div />').append(
+            $('<p />', {'class': 'icon ', val:data.status.id,
+                        style:'background-position:'+data.status.pos})
+        ).append(
+            $('<p />', {'class': 'event-msg', text: data.message})
+        ).appendTo(div);
         time = '<p>Posted On: </p>' + time;
         $('<div />', {'class': 'event-date', html: time}).appendTo(div);
 
