@@ -77,6 +77,12 @@
 	<select id="statusValue" class="update-status" name="severity"></select>
 	<label id="messageLabel" for="message">Message:</label>
 	<textarea id="eventMessage" class="update-message" name="message"></textarea>
+        <p class="italic"> If the Date or Time are blank they default to the current date or time, respectively</p>
+        <label id="dateLabel" for="date">Date:</label>
+        <input id="date" type="text">
+        <label id="timeLabel" for="time">Time:</label>
+        <input id="time" type="text">
+        <p style="display:inline" class="italic">Time should be formatted like HH:MM</p>
       </div>
 
       <div class="dialog" id="edit-service-modal" title="Edit Service">

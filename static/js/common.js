@@ -790,8 +790,9 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
 
             $("#update-status").click(function(event){
                 event.preventDefault();
+                $("#date").datepicker({showAnim: ""});
                 $("#add-event-modal").dialog({
-                    height: 290,
+                    height: 450,
                     width: 460,
                     resizable: false,
                     modal: true,
@@ -830,8 +831,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                     height: 250,
                     width: 460,
                     resizable: false,
-                    modal: true,
-                    buttons: {
+                    modal: true, buttons: {
                         'Add Note': function(){
                             $.ajax({ 
                                 type: "POST",
