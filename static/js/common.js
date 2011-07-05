@@ -953,6 +953,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         var minutes = d.getUTCMinutes();
         if (minutes < 10) { minutes = '0' + minutes; }
         $("#time").val(d.getUTCHours() + ":" + minutes);
+        var url = $(this).attr("href");
         $("#add-event-modal").dialog({
             height: 450,
             width: 460,
@@ -962,7 +963,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 'Update Status': function(){
                     $.ajax({ 
                         type: "POST",
-                        url: $(this).attr("href"), 
+                        url: url,
                         data: {
                             status: $("#statusValue").val(),
                             message: $("#eventMessage").val(),

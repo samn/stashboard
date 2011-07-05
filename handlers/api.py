@@ -326,7 +326,6 @@ class EventInstanceHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
 
-
     @authorized.api("admin")
     def delete(self, version, service_slug, sid):
         logging.debug("EventInstanceHandler#delete sid=%s" % sid)
@@ -347,6 +346,38 @@ class EventInstanceHandler(restful.Controller):
         else:
             self.error(404, "API Version %s not supported" % version)
 
+    @authorized.api("admin")
+    def post(self, version, service_slug, sid):
+        logging.debug("EventInstanceHandler#post id=%s" % sid)
+        if (self.valid_version(version)):
+            status_slug = self.request.get("status", default_value=None)
+            message = self.request.get("message", default_value=None)
+            date = self.request.get("date", default_value="")
+            time = self.request.get("time", default_value="")
+            service = Service.get_by_slug(service_slug)
+
+            if (service):
+                event = Event.get(db.Key(sid))
+                if (event and service.key() == event.service.key()):
+                    if status_slug != event.status.slug:
+                        status = Status.get_by_slug(status_slug)
+                        if status:
+                            event.status = status
+                    if message != event.message:
+                        event.message = message
+                    start =  date + " " + time
+                    if start != " " and start != event.start:
+                        event.start = parse(start)
+
+                    event.put()
+                    self.success(event.rest(self.base_url(version)))
+                    add_hub_notification_task(service.name)
+                else:
+                    self.error(404, "No event for Service %s with sid = %s" % (service_slug,sid))
+            else:
+                self.error(404, "Service %s not found" % service_slug)
+        else:
+            self.error(404, "API Version %s not supported" % version)
 
 
 class StatusesListHandler(restful.Controller):
