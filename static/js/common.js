@@ -946,6 +946,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         e.preventDefault();
         var par = $(this).parent().parent();
         $("#eventMessage").val(par.find(".event-msg").html());
+        $("#statusValue").val(par.find(".icon").val());
         $("#add-event-modal").dialog({
             height: 450,
             width: 460,
