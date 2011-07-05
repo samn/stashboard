@@ -666,13 +666,15 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         var time = $.datepicker.formatDate("MM d, yy", d);
 
         if (isAdmin) {
-            $('<div />', {"class": "delete"}).append(
-                $('<a />', {href: data.url}).append(
+            $('<div />', {"class": "admin"}).append(
+                $('<a />', {href: data.url, "class": "delete"}).append(
                     $('<img />', {
                         src: "/images/status/minus-circle.png",
                         alt: "Delete"
                     })
                 )
+            ).append(
+                $('<a />', {href:data.url, "class": "edit", text: "Edit"})
             ).appendTo(div);
         }
         $('<div />', {'class': 'event-msg', text: data.message}).appendTo(div);
@@ -747,7 +749,6 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 dataType: "json",
                 context: $(".event-log"), 
                 success: function(data){
-
                     var events = data.events;
                     var length = events.length;
 
@@ -918,7 +919,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         error: function(){}
     });
 
-    $(".event-log div .delete a").live('click', function(e){
+    $(".event-log div .admin a.delete").live('click', function(e){
         e.preventDefault();
         $.ajax({ 
             type: "DELETE",
@@ -932,6 +933,44 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
             },
             error: function(){
                 stashboard.error("Could not delete event. Please try again");
+            }
+        });
+    });
+
+    $(".event-log div .admin a.edit").live('click', function(e){
+        e.preventDefault();
+        var par = $(this).parent().parent();
+        $("#eventMessage").val(par.find(".event-msg").html());
+        $("#add-event-modal").dialog({
+            height: 450,
+            width: 460,
+            resizable: false,
+            modal: true,
+            buttons: {
+                'Update Status': function(){
+                    $.ajax({ 
+                        type: "POST",
+                        url: $(this).attr("href"), 
+                        data: {
+                            status: $("#statusValue").val(),
+                            message: $("#eventMessage").val(),
+                            date: $("#date").val(),
+                            time: $("#time").val()
+                        },
+                        dataType: "json",
+                        context: par,
+                        success: function(data){
+                            $("#add-event-modal").dialog('close');
+                        },
+                        error: function(){
+                            $("#add-event-modal").dialog('close');
+                            stashboard.error("Could not edit event. Please try again");
+                        }
+                    });
+                },
+                'Cancel': function(){
+                    $(this).dialog('close');
+                }
             }
         });
     });

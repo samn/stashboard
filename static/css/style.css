@@ -113,7 +113,8 @@ h3.date-range {color: #999; margin-top: 20px}
 #webservices .event-log div {padding:10px 0 10px 0;width:450px;white-space:normal;word-wrap:break-word;}
 #webservices .event-log div .event-msg {padding:5px 0 5px 0;}
 #webservices .event-log div .event-date p {display:inline;font-weight:bold;}
-#webservices .event-log div .delete {display:inline;}
+#webservices .event-log div .admin {display:inline;}
+#webservices .event-log div .admin .edit {padding-left:20px;}
 .status-header {width: 10%;}
 .time-header {width: 20%;}
 .delete-header {width: 8%;}
