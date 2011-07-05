@@ -28,11 +28,7 @@ clients, like a Flex app or a desktop program.
 
 __author__ = 'Kyle Conroy'
 
-import datetime
-from datetime import timedelta
-from datetime import date
-from datetime import datetime
-from datetime import time
+from datetime import timedelta, date, datetime, time
 from dateutil.parser import parse
 import string
 import re
@@ -234,11 +230,7 @@ class EventsListHandler(restful.Controller):
                 query.order('-start')
 
                 if query:
-                    data = []
-
-                    for s in query:
-                        data.append(s.rest(self.base_url(version)))
-
+                    data = [s.rest(self.base_url(version)) for s in query]
                     data = { "events": data }
 
                     self.json(data)
@@ -258,6 +250,8 @@ class EventsListHandler(restful.Controller):
             status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
             informational = self.request.get("informational", default_value=None)
+            date = self.request.get("date", default_value="")
+            time = self.request.get("time", default_value="")
 
             service = Service.get_by_slug(service_slug)
             if service:
@@ -277,6 +271,9 @@ class EventsListHandler(restful.Controller):
                     e = Event(status=status, service=service,
                             message=message)
 
+                    start =  date + " " + time
+                    if start != " ":
+                        e.start = parse(start)
                     e.informational = informational and informational == "true"
 
                     e.put()

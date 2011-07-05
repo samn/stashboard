@@ -803,7 +803,9 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                                 url: "/api/v1/services/" + service.id + "/events",
                                 data: {
                                     status: $("#statusValue").val(),
-                                    message: $("#eventMessage").val()
+                                    message: $("#eventMessage").val(),
+                                    date: $("#date").val(),
+                                    time: $("#time").val()
                                 },
                                 dataType: "json",
                                 context:$("#add-event-modal"), 
