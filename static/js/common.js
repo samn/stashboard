@@ -319,7 +319,7 @@ stashboard.fillIndex = function() {
             
             // don't display statuses from the future
             if (stashboard.endDate > new Date()) {
-                stashboard.endDate = new Date(new Date().getTime() - 86400000);
+                stashboard.endDate = new Date(new Date().getTime());
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
 
@@ -333,7 +333,7 @@ stashboard.fillIndex = function() {
             stashboard.startDate = new Date(stashboard.endDate.getTime() - 86400000*numDays);
 
             if (new Date().getTime() - stashboard.startDate.getTime() - 86400000 >= 86400000*(stashboard.historySize+1)) {
-                stashboard.endDate = new Date(new Date().getTime() - 86400000);
+                stashboard.endDate = new Date(new Date().getTime());
                 stashboard.startDate = new Date(stashboard.endDate - 86400000*numDays);
             }
 

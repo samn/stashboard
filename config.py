@@ -53,5 +53,5 @@ SITE = {
     "template_path": os.path.join(APP_ROOT_DIR, "views/default"),
     "rich_client": True, #If false, the website will go into a simplified read-only view
     "history_size": 30, # How far back can people look (in days)
-    "num_days": 4 # How many days to display after current on the main screen
+    "num_days": 4 # How many days to display after current on the main screen (includes the current day and num_days-1 in the past)
 }

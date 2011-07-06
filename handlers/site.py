@@ -139,8 +139,8 @@ class RootHandler(restful.Controller):
         regions = Region.all_regions()
 
         td = default_template_data()
-        td["start_date"] = start_date - timedelta(days=1)
-        td["end_date"] = end_date - timedelta(days=1)
+        td["start_date"] = start_date
+        td["end_date"] = end_date
         td["history_size"] = history_size
         td["sprites"] = jsonpickle.encode(sprites.sprites)
         td["regions"] = regions
