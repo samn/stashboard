@@ -683,7 +683,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         ).append(
             $('<p />', {'class': 'event-msg', text: data.message})
         ).appendTo(div);
-        date = '<p>Posted On: </p>' + date;
+        date = '<p>Posted On: </p>' + date + " at " + formatTime(d) + " UTC";
         $('<div />', {'class': 'event-date', html: date, val:data.timestamp}).appendTo(div);
 
 
@@ -940,6 +940,12 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         });
     });
 
+    function formatTime(date) {
+        var minutes = date.getUTCMinutes();
+        if (minutes < 10) { minutes = '0' + minutes; }
+        return date.getUTCHours() + ":" + minutes;
+    }
+
     $(".event-log div .admin a.edit").live('click', function(e){
         e.preventDefault();
         var par = $(this).parent().parent();
@@ -948,9 +954,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         
         var d = new Date(par.find(".event-date").val());
         $("#date").val($.datepicker.formatDate("mm/d/yy", d));
-        var minutes = d.getUTCMinutes();
-        if (minutes < 10) { minutes = '0' + minutes; }
-        $("#time").val(d.getUTCHours() + ":" + minutes);
+        $("#time").val(formatTime(d));
         var url = $(this).attr("href");
         $("#add-event-modal").dialog({
             height: 460,
