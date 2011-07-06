@@ -957,6 +957,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         var d = new Date(par.find(".event-date").val());
         $("#date").val($.datepicker.formatDate("mm/d/yy", d));
         $("#time").val(formatTime(d));
+        var url = $(this).attr("href");
         $("#add-event-modal").dialog({
             height: 450,
             width: 460,
@@ -966,7 +967,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 'Update Status': function(){
                     $.ajax({ 
                         type: "POST",
-                        url: $(this).attr("href"), 
+                        url: url,
                         data: {
                             status: $("#statusValue").val(),
                             message: $("#eventMessage").val(),
