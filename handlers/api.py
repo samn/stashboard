@@ -349,23 +349,27 @@ class EventInstanceHandler(restful.Controller):
     @authorized.api("admin")
     def post(self, version, service_slug, sid):
         logging.debug("EventInstanceHandler#post id=%s" % sid)
-        if (self.valid_version(version)):
+        if self.valid_version(version):
             status_slug = self.request.get("status", default_value=None)
             message = self.request.get("message", default_value=None)
             date = self.request.get("date", default_value="")
             time = self.request.get("time", default_value="")
             service = Service.get_by_slug(service_slug)
 
-            if (service):
+            if service:
                 event = Event.get(db.Key(sid))
-                if (event and service.key() == event.service.key()):
-                    if status_slug != event.status.slug:
+                if event and service.key() == event.service.key():
+                    # fetch the Status if it's changed or if no message was provided
+                    # (so the description of the Status will be used as the default message)
+                    if status_slug and not message or status_slug != event.status.slug:
                         status = Status.get_by_slug(status_slug)
                         if status:
                             event.status = status
-                    if message != event.message:
+                            if not message:
+                                message = status.description
+                    if message and message != event.message:
                         event.message = message
-                    start =  date + " " + time
+                    start = date + " " + time
                     if start == " ":
                         event.start = datetime.now() 
                     elif start != event.start:

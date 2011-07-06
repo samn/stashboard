@@ -798,7 +798,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                 event.preventDefault();
                 $("#date").datepicker({showAnim: ""});
                 $("#add-event-modal").dialog({
-                    height: 450,
+                    height: 460,
                     width: 460,
                     resizable: false,
                     modal: true,
@@ -953,7 +953,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
         $("#time").val(d.getUTCHours() + ":" + minutes);
         var url = $(this).attr("href");
         $("#add-event-modal").dialog({
-            height: 450,
+            height: 460,
             width: 460,
             resizable: false,
             modal: true,
