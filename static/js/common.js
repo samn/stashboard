@@ -816,9 +816,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                                 dataType: "json",
                                 context:$("#add-event-modal"), 
                                 success: function(data){
-                                    this.dialog('close');
-                                    var div = createRow(data);
-                                    $(".event-log").prepend(div);
+                                    window.location.reload();
                                 },
                                 error: function(){
                                     this.dialog('close');
@@ -973,7 +971,7 @@ stashboard.fillService = function(serviceName, isAdmin, start_date, end_date) {
                         dataType: "json",
                         context: par,
                         success: function(data){
-                            $("#add-event-modal").dialog('close');
+                            window.location.reload();
                         },
                         error: function(){
                             $("#add-event-modal").dialog('close');
