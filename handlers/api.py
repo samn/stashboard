@@ -366,7 +366,9 @@ class EventInstanceHandler(restful.Controller):
                     if message != event.message:
                         event.message = message
                     start =  date + " " + time
-                    if start != " " and start != event.start:
+                    if start == " ":
+                        event.start = datetime.now() 
+                    elif start != event.start:
                         event.start = parse(start)
 
                     event.put()
